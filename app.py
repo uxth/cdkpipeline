@@ -4,7 +4,7 @@
 # the CDK's core module.  The following line also imports it as `core` for use
 # with examples from the CDK Developer's Guide, which are in the process of
 # being updated to use `cdk`.  You may delete this import if you don't need it.
-
+import os
 
 from aws_cdk import core
 from aws_cdk.core import Stack, Environment
@@ -71,8 +71,8 @@ WmpPipelineStack(
     app,
     'WmpPipelineStack',
     env=core.Environment(
-        account='182732313984',
-        region='us-west-2'
+        account=os.environ['CDK_DEFAULT_ACCOUNT'],
+        region=os.environ['CDK_DEFAULT_REGION']
     )
 )
 app.synth()
