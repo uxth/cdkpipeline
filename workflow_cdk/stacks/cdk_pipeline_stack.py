@@ -91,24 +91,24 @@ class WmpPipelineStack(core.Stack):
             pipeline_name="Wmp-Codepipeline",
             cloud_assembly_artifact=cloud_assembly_artifact,
             source_action=
-            codepipeline_actions.GitHubSourceAction(
-                action_name="GitHub_SourceCode_Download",
-                output=source_artifact,
-                # oauth_token=SecretValue.plain_text('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'),
-                oauth_token=core.SecretValue.secrets_manager('github_cdkpipeline'),
-                trigger=codepipeline_actions.GitHubTrigger.POLL,
-                owner="uxth",
-                repo="cdkpipeline",
-                branch='main'
-            ),
-            # codepipeline_actions.BitBucketSourceAction(
-            #     action_name='Github_sourcecode_download',
-            #     connection_arn='arn:aws:codestar-connections:us-west-2:711208530951:connection/8b570e8a-f02c-426d-897a-90838859eff8',
+            # codepipeline_actions.GitHubSourceAction(
+            #     action_name="GitHub_SourceCode_Download",
             #     output=source_artifact,
-            #     owner='uxth',
-            #     repo='cdkpipeline',
+            #     # oauth_token=SecretValue.plain_text('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'),
+            #     oauth_token=core.SecretValue.secrets_manager('github_cdkpipeline'),
+            #     trigger=codepipeline_actions.GitHubTrigger.POLL,
+            #     owner="uxth",
+            #     repo="cdkpipeline",
             #     branch='main'
             # ),
+            codepipeline_actions.BitBucketSourceAction(
+                action_name='Github_sourcecode_download',
+                connection_arn='arn:aws:codestar-connections:us-west-2:711208530951:connection/8b570e8a-f02c-426d-897a-90838859eff8',
+                output=source_artifact,
+                owner='uxth',
+                repo='cdkpipeline',
+                branch='main'
+            ),
             synth_action=pipelines.SimpleSynthAction(
                 synth_command='cdk synth',
                 cloud_assembly_artifact=cloud_assembly_artifact,
