@@ -131,6 +131,7 @@ class WmpPipelineStack(core.Stack):
             manual_approvals=False
         )
         teststage.add_manual_approval_action(action_name='Deploy_Dev')
+
         devstage = pipeline.add_application_stage(
             WmpApplicationStage(
                 self,
