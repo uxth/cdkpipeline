@@ -60,14 +60,22 @@ class WmpPipelineStack(cdk.Stack):
 
         #
         sourceStage = cpp.add_stage(stage_name='Source', actions=[
-            codepipeline_actions.GitHubSourceAction(
-                action_name="GitHub_SourceCode_Download",
+            # codepipeline_actions.GitHubSourceAction(
+            #     action_name="GitHub_SourceCode_Download",
+            #     output=source_artifact,
+            #     # oauth_token=SecretValue.plain_text('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'),
+            #     oauth_token=SecretValue.secrets_manager('github_cdkpipeline'),
+            #     trigger=codepipeline_actions.GitHubTrigger.POLL,
+            #     owner="uxth",
+            #     repo="cdkpipeline",
+            #     branch='main'
+            # )
+            codepipeline_actions.BitBucketSourceAction(
+                action_name='Github_sourcecoce_download',
+                connection_arn='arn:aws:codestar-connections:us-west-2:711208530951:connection/8b570e8a-f02c-426d-897a-90838859eff8',
                 output=source_artifact,
-                # oauth_token=SecretValue.plain_text('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'),
-                oauth_token=SecretValue.secrets_manager('github_cdkpipeline'),
-                trigger=codepipeline_actions.GitHubTrigger.POLL,
-                owner="uxth",
-                repo="cdkpipeline",
+                owner='uxth',
+                repo='cdkpipeline',
                 branch='main'
             )
         ])
