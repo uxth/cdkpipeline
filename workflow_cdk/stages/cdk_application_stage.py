@@ -1,13 +1,7 @@
-from aws_cdk.aws_iam import PolicyDocument
-from aws_cdk.core import Construct, Stack, Stage, Environment
+
 from aws_cdk import (
-    aws_ec2 as ec2,
-    core,
-    aws_iam as iam,
-    aws_eks as eks
+    core
 )
-from aws_cdk.pipelines import CdkPipeline
-import aws_cdk.aws_codepipeline as code_pipeline
 
 from utils.configBuilder import WmpConfig
 from workflow_cdk.stacks.cdk_argo_events_stack import CdkArgoEventsStack
@@ -18,10 +12,10 @@ from workflow_cdk.stacks.cdk_manifests_stack import CdkManifestsStack
 from workflow_cdk.stacks.cdk_vpc_stack import CdkVpcStack
 
 
-class WmpApplicationStage(Stage):
-    def __init__(self, scope: Construct, id: str, config: WmpConfig, **kwargs):
+class WmpApplicationStage(core.Stage):
+    def __init__(self, scope: core.Construct, id: str, config: WmpConfig, **kwargs):
         super().__init__(scope, id, **kwargs)
-        env = Environment(
+        env = core.Environment(
             account=config.getValue('AWSAccountID'),
             region=config.getValue('AWSProfileRegion')
         )

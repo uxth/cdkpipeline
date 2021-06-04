@@ -33,31 +33,8 @@ class CdkEksStack(core.Stack):
 
         eks_role = iam.Role(
             self, id="wmp-eks-admin",
-            # assumed_by=iam.ArnPrincipal(arn=eks_user.user_arn),
-            assumed_by=iam.CompositePrincipal(
-                iam.ServicePrincipal('eks.amazonaws.com'),
-                iam.ServicePrincipal('s3.amazonaws.com'),
-                iam.ArnPrincipal(arn=eks_user.user_arn)
-            ),
-            role_name='wmp-eks-cluster-role',
-            managed_policies=[
-                iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name="AdministratorAccess"),
-                iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name='AmazonS3FullAccess'),
-                iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name='AmazonEKSClusterPolicy'),
-            ],
-            inline_policies={
-                'KMSFullAccess': PolicyDocument(
-                    assign_sids=True,
-                    statements=[
-                        iam.PolicyStatement(
-                            sid='KMSFullAccess',
-                            effect=iam.Effect.ALLOW,
-                            actions=['kms:*'],
-                            resources=['*']
-                        )
-                    ]
-                )
-            }
+            assumed_by=iam.ArnPrincipal(arn=eks_user.user_arn),
+            role_name='wmp-eks-cluster-role'
         )
 
         self.cluster = eks.Cluster(

@@ -1,7 +1,6 @@
 from aws_cdk import (
      aws_ec2 as ec2,
-     core,
-     aws_iam as iam
+     core
 )
 
 from utils.configBuilder import WmpConfig
