@@ -79,6 +79,7 @@ class WmpPipelineStack(cdk.Stack):
                     cloud_assembly_artifact=cloud_assembly_artifact,
                     source_artifact=source_artifact,
                     install_commands=[
+                        "mkdir wmp_cdk",
                         "npm install -g aws-cdk",
                         "pip install -r requirements.txt",
                         "python setup.py install"
