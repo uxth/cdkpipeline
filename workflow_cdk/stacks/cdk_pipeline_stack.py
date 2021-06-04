@@ -113,7 +113,7 @@ class WmpPipelineStack(cdk.Stack):
             self, "Wmp-CdkPipeline1",
             cloud_assembly_artifact=cloud_assembly_artifact,
             code_pipeline=cpp,
-            self_mutating=False
+            self_mutating=True
         )
         #
         # pipeline = CdkPipeline(
