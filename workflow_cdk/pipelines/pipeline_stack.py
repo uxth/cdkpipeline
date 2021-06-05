@@ -2,9 +2,12 @@ from aws_cdk import (
     core,
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as codepipeline_actions,
-    pipelines as pipelines
+    pipelines as pipelines,
 )
-
+from cloudcomponents import (
+    cdk_chatops as chatops,
+    cdk_developer_tools_notifications as notifications
+)
 from utils.configBuilder import WmpConfig
 from workflow_cdk.pipelines.application_stage import WmpApplicationStage
 
@@ -60,4 +63,34 @@ class WmpPipelineStack(core.Stack):
                 'Dev-Stage',
                 config=WmpConfig('workflow_cdk/config/dev.json', 'config')
             )
+        )
+
+        notifications.PipelineNotificationRule(
+            self,
+            'PipelineNotificationRule',
+            name='PipelineNotificationRule',
+            pipeline=pipeline.code_pipeline,
+            events=[
+                notifications.PipelineEvent.PIPELINE_EXECUTION_STARTED,
+                notifications.PipelineEvent.PIPELINE_EXECUTION_FAILED,
+                notifications.PipelineEvent.PIPELINE_EXECUTION_SUCCEEDED,
+                notifications.PipelineEvent.ACTION_EXECUTION_STARTED,
+                notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,
+                notifications.PipelineEvent.ACTION_EXECUTION_FAILED,
+                notifications.PipelineEvent.MANUAL_APPROVAL_NEEDED,
+                notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
+                notifications.PipelineEvent.MANUAL_APPROVAL_FAILED,
+                notifications.PipelineEvent.STAGE_EXECUTION_STARTED,
+                notifications.PipelineEvent.STAGE_EXECUTION_SUCCEEDED,
+                notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
+            ],
+            targets=[
+                notifications.SlackChannel(chatops.SlackChannelConfiguration(
+                    self,
+                    'Slack',
+                    configuration_name='Slack',
+                    slack_workspace_id='TGK603YCB',
+                    slack_channel_id='C023X8XKCF8'
+                ))
+            ]
         )

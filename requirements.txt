@@ -20,3 +20,4 @@ pyyaml
 numpy
 dictor
 setuptools
+cloudcomponents.cdk-developer-tools-notifications
