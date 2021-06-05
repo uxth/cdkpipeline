@@ -66,6 +66,20 @@ class WmpPipelineStack(core.Stack):
             )
         )
 
+        snsTopic=sns.Topic(
+                    self,
+                    'SnsTopic',
+                    topic_name='SnsTopic',
+                    display_name='PipelineTopic',
+                    fifo=True
+                )
+        emailSubscription = sns.Subscription(
+            self,
+            'EmailSubscription',
+            topic=snsTopic,
+            endpoint='ning.xu@tusimple.ai',
+            protocol=sns.SubscriptionProtocol.EMAIL
+        )
         notifications.PipelineNotificationRule(
             self,
             'PipelineNotificationRule',
@@ -93,12 +107,6 @@ class WmpPipelineStack(core.Stack):
                 #     slack_workspace_id='TGK603YCB',
                 #     slack_channel_id='C023X8XKCF8'
                 # ))
-                notifications.SnsTopic(sns.Topic(
-                    self,
-                    'SnsTopic',
-                    topic_name='SnsTopic',
-                    display_name='PipelineTopic',
-                    fifo=True
-                ))
+                notifications.SnsTopic(snsTopic)
             ]
         )
