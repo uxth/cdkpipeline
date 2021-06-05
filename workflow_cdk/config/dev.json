@@ -1,7 +1,6 @@
 {
   "wmp-config": {
     "AWSAccountID": "182732313984",
-    "AWSProfileName": "dev",
     "AWSProfileRegion": "us-west-2",
     "vpc": {
       "cidr": "10.0.0.0/16"
