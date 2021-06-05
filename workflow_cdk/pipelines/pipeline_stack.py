@@ -3,6 +3,7 @@ from aws_cdk import (
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as codepipeline_actions,
     pipelines as pipelines,
+    aws_sns as sns
 )
 from cloudcomponents import (
     cdk_chatops as chatops,
@@ -85,12 +86,19 @@ class WmpPipelineStack(core.Stack):
                 notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
             ],
             targets=[
-                notifications.SlackChannel(chatops.SlackChannelConfiguration(
+                # notifications.SlackChannel(chatops.SlackChannelConfiguration(
+                #     self,
+                #     'Slack',
+                #     configuration_name='Slack',
+                #     slack_workspace_id='TGK603YCB',
+                #     slack_channel_id='C023X8XKCF8'
+                # ))
+                notifications.SnsTopic(sns.Topic(
                     self,
-                    'Slack',
-                    configuration_name='Slack',
-                    slack_workspace_id='TGK603YCB',
-                    slack_channel_id='C023X8XKCF8'
+                    'SnsTopic',
+                    topic_name='SnsTopic',
+                    display_name='PipelineTopic',
+                    fifo=True
                 ))
             ]
         )
