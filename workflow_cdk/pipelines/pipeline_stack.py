@@ -52,7 +52,7 @@ class WmpPipelineStack(core.Stack):
             ),
             manual_approvals=False
         )
-        teststage.add_manual_approval_action(action_name='Ready_To_Move_To_Next_Stage?')
+        teststage.add_manual_approval_action(action_name='Ready_To_Move_To_Next_Stage')
 
         devstage = pipeline.add_application_stage(
             WmpApplicationStage(
