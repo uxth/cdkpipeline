@@ -125,7 +125,7 @@ class WmpPipelineStack(core.Stack):
             WmpApplicationStage(
                 self,
                 'test-stage',
-                config=WmpConfig('workflow_cdk/config/config.json', 'test')
+                config=WmpConfig('workflow_cdk/config/test.json', 'config')
             ),
             manual_approvals=False
         )
@@ -135,6 +135,6 @@ class WmpPipelineStack(core.Stack):
             WmpApplicationStage(
                 self,
                 'dev-stage',
-                config=WmpConfig('workflow_cdk/config/config.json', 'dev')
+                config=WmpConfig('workflow_cdk/config/dev.json', 'config')
             )
         )
