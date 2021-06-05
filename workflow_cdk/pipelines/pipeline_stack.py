@@ -1,13 +1,12 @@
 from aws_cdk import (
     core,
-    aws_iam as iam,
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as codepipeline_actions,
     pipelines as pipelines
 )
 
 from utils.configBuilder import WmpConfig
-from workflow_cdk.stages.cdk_application_stage import WmpApplicationStage
+from workflow_cdk.pipelines.application_stage import WmpApplicationStage
 
 
 class WmpPipelineStack(core.Stack):

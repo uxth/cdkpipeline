@@ -7,17 +7,8 @@
 import os
 
 from aws_cdk import core
-from aws_cdk.core import Stack, Environment
 
-from utils.configBuilder import WmpConfig
-
-from workflow_cdk.stacks.cdk_argo_events_stack import CdkArgoEventsStack
-from workflow_cdk.stacks.cdk_argo_workflows_stack import CdkArgoWorkflowsStack
-from workflow_cdk.stacks.cdk_manifests_stack import CdkManifestsStack
-from workflow_cdk.stacks.cdk_pipeline_stack import WmpPipelineStack
-from workflow_cdk.stacks.cdk_vpc_stack import CdkVpcStack
-from workflow_cdk.stacks.cdk_eks_stack import CdkEksStack
-from workflow_cdk.stacks.cdk_kafka_stack import CdkKafkaStack
+from workflow_cdk.pipelines.pipeline_stack import WmpPipelineStack
 
 app = core.App()
 #

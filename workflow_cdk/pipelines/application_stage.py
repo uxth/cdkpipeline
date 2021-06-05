@@ -4,12 +4,12 @@ from aws_cdk import (
 )
 
 from utils.configBuilder import WmpConfig
-from workflow_cdk.stacks.cdk_argo_events_stack import CdkArgoEventsStack
-from workflow_cdk.stacks.cdk_argo_workflows_stack import CdkArgoWorkflowsStack
-from workflow_cdk.stacks.cdk_eks_stack import CdkEksStack
-from workflow_cdk.stacks.cdk_kafka_stack import CdkKafkaStack
-from workflow_cdk.stacks.cdk_manifests_stack import CdkManifestsStack
-from workflow_cdk.stacks.cdk_vpc_stack import CdkVpcStack
+from workflow_cdk.stacks.argo_events_stack import ArgoEventsStack
+from workflow_cdk.stacks.argo_workflows_stack import ArgoWorkflowsStack
+from workflow_cdk.stacks.eks_stack import EksStack
+from workflow_cdk.stacks.kafka_stack import KafkaStack
+from workflow_cdk.stacks.manifests_stack import ManifestsStack
+from workflow_cdk.stacks.vpc_stack import VpcStack
 
 
 class WmpApplicationStage(core.Stage):
@@ -19,33 +19,33 @@ class WmpApplicationStage(core.Stage):
             account=config.getValue('AWSAccountID'),
             region=config.getValue('AWSProfileRegion')
         )
-        vpc_stack = CdkVpcStack(
+        vpc_stack = VpcStack(
             self, "wmp-vpc",
             config=config,
             env=env)
 
-        eks_stack = CdkEksStack(
+        eks_stack = EksStack(
             self, 'wmp-eks',
             vpc=vpc_stack.vpc,
             config=config,
             env=env)
         eks_stack.add_dependency(vpc_stack)
 
-        kafka_stack = CdkKafkaStack(
+        kafka_stack = KafkaStack(
             self, 'wmp-kafka',
             eks_stack=eks_stack,
             config=config,
             env=env)
         kafka_stack.add_dependency(eks_stack)
 
-        argo_workflows_stack = CdkArgoWorkflowsStack(
+        argo_workflows_stack = ArgoWorkflowsStack(
             self, 'wmp-argo-workflows',
             eks_stack=eks_stack,
             config=config,
             env=env)
         argo_workflows_stack.add_dependency(eks_stack)
 
-        argo_events_stack = CdkArgoEventsStack(
+        argo_events_stack = ArgoEventsStack(
             self, 'wmp-argo-events',
             eks_stack=eks_stack,
             config=config,
@@ -53,7 +53,7 @@ class WmpApplicationStage(core.Stage):
         argo_events_stack.add_dependency(argo_workflows_stack)
         argo_events_stack.add_dependency(kafka_stack)
 
-        manifests_stack = CdkManifestsStack(
+        manifests_stack = ManifestsStack(
             self, 'wmp-manifests',
             eks_stack=eks_stack,
             config=config,
