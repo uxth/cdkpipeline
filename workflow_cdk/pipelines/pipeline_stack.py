@@ -87,16 +87,16 @@ class WmpPipelineStack(core.Stack):
             events=[
                 # notifications.PipelineEvent.PIPELINE_EXECUTION_STARTED,
                 notifications.PipelineEvent.PIPELINE_EXECUTION_FAILED,
-                # notifications.PipelineEvent.PIPELINE_EXECUTION_SUCCEEDED,
+                notifications.PipelineEvent.PIPELINE_EXECUTION_SUCCEEDED,
                 # notifications.PipelineEvent.ACTION_EXECUTION_STARTED,
                 # notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,
                 notifications.PipelineEvent.ACTION_EXECUTION_FAILED,
                 notifications.PipelineEvent.MANUAL_APPROVAL_NEEDED,
-                # notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
+                notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
                 # notifications.PipelineEvent.MANUAL_APPROVAL_FAILED,
                 # notifications.PipelineEvent.STAGE_EXECUTION_STARTED,
-                # notifications.PipelineEvent.STAGE_EXECUTION_SUCCEEDED,
-                # notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
+                notifications.PipelineEvent.STAGE_EXECUTION_SUCCEEDED,
+                notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
             ],
             targets=[
                 # notifications.SlackChannel(chatops.SlackChannelConfiguration(
