@@ -70,7 +70,7 @@ class WmpPipelineStack(core.Stack):
             self,
             'SnsTopic',
             topic_name='SnsTopic',
-            display_name='PipelineTopic'
+            display_name='WMP Automation Notifications'
         )
         emailSubscription = sns.Subscription(
             self,
@@ -85,18 +85,18 @@ class WmpPipelineStack(core.Stack):
             name='PipelineNotificationRule',
             pipeline=pipeline.code_pipeline,
             events=[
-                notifications.PipelineEvent.PIPELINE_EXECUTION_STARTED,
+                # notifications.PipelineEvent.PIPELINE_EXECUTION_STARTED,
                 notifications.PipelineEvent.PIPELINE_EXECUTION_FAILED,
-                notifications.PipelineEvent.PIPELINE_EXECUTION_SUCCEEDED,
-                notifications.PipelineEvent.ACTION_EXECUTION_STARTED,
-                notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,
+                # notifications.PipelineEvent.PIPELINE_EXECUTION_SUCCEEDED,
+                # notifications.PipelineEvent.ACTION_EXECUTION_STARTED,
+                # notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,
                 notifications.PipelineEvent.ACTION_EXECUTION_FAILED,
                 notifications.PipelineEvent.MANUAL_APPROVAL_NEEDED,
-                notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
-                notifications.PipelineEvent.MANUAL_APPROVAL_FAILED,
-                notifications.PipelineEvent.STAGE_EXECUTION_STARTED,
-                notifications.PipelineEvent.STAGE_EXECUTION_SUCCEEDED,
-                notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
+                # notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
+                # notifications.PipelineEvent.MANUAL_APPROVAL_FAILED,
+                # notifications.PipelineEvent.STAGE_EXECUTION_STARTED,
+                # notifications.PipelineEvent.STAGE_EXECUTION_SUCCEEDED,
+                # notifications.PipelineEvent.STAGE_EXECUTION_FAILED,
             ],
             targets=[
                 # notifications.SlackChannel(chatops.SlackChannelConfiguration(
