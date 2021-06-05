@@ -66,13 +66,13 @@ class WmpPipelineStack(core.Stack):
             )
         )
 
-        snsTopic=sns.Topic(
-                    self,
-                    'SnsTopic',
-                    topic_name='SnsTopic',
-                    display_name='PipelineTopic',
-                    fifo=True
-                )
+        snsTopic = sns.Topic(
+            self,
+            'SnsTopic',
+            topic_name='SnsTopic',
+            display_name='PipelineTopic',
+            fifo=True
+        )
         emailSubscription = sns.Subscription(
             self,
             'EmailSubscription',
