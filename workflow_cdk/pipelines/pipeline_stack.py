@@ -70,8 +70,7 @@ class WmpPipelineStack(core.Stack):
             self,
             'SnsTopic',
             topic_name='SnsTopic',
-            display_name='PipelineTopic',
-            fifo=True
+            display_name='PipelineTopic'
         )
         emailSubscription = sns.Subscription(
             self,
