@@ -47,7 +47,7 @@ class WmpPipelineStack(core.Stack):
         teststage = pipeline.add_application_stage(
             WmpApplicationStage(
                 self,
-                'TEST_Stage_Deployment',
+                'Test_Stage',
                 config=WmpConfig('workflow_cdk/config/test.json', 'config')
             ),
             manual_approvals=False
@@ -57,7 +57,7 @@ class WmpPipelineStack(core.Stack):
         devstage = pipeline.add_application_stage(
             WmpApplicationStage(
                 self,
-                'DEV_Stage_Deployment',
+                'Dev_Stage',
                 config=WmpConfig('workflow_cdk/config/dev.json', 'config')
             )
         )
