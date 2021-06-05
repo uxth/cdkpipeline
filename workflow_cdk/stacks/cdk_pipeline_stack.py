@@ -1,12 +1,13 @@
 from aws_cdk import (
     core,
+    aws_iam as iam,
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as codepipeline_actions,
     pipelines as pipelines
 )
 
 from utils.configBuilder import WmpConfig
-from workflow_cdk.pipelines.application_stage import WmpApplicationStage
+from workflow_cdk.stages.cdk_application_stage import WmpApplicationStage
 
 
 class WmpPipelineStack(core.Stack):
@@ -14,6 +15,7 @@ class WmpPipelineStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        # The code that defines your stack goes here
         source_artifact = codepipeline.Artifact()
         cloud_assembly_artifact = codepipeline.Artifact()
         # #

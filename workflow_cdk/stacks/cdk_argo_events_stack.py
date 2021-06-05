@@ -4,12 +4,12 @@ from aws_cdk import (
 )
 
 from utils.configBuilder import WmpConfig
-from workflow_cdk.stacks.eks_stack import EksStack
+from workflow_cdk.stacks.cdk_eks_stack import CdkEksStack
 from utils import yamlParser
 
 
-class ArgoEventsStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, config: WmpConfig, **kwargs) -> None:
+class CdkArgoEventsStack(core.Stack):
+    def __init__(self, scope: core.Construct, construct_id: str, eks_stack: CdkEksStack, config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         # install argo events
         eks.HelmChart(
