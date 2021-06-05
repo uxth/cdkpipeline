@@ -1,5 +1,5 @@
 {
-  "config": {
+  "wmp-config": {
     "AWSAccountID": "182732313984",
     "AWSProfileName": "dev",
     "AWSProfileRegion": "us-west-2",
