@@ -76,7 +76,7 @@ class WmpPipelineStack(core.Stack):
             self,
             'EmailSubscription',
             topic=snsTopic,
-            endpoint='mapawsnotification@tusimple.ai',
+            endpoint='ning.xu@tusimple.ai',
             protocol=sns.SubscriptionProtocol.EMAIL
         )
         notifications.PipelineNotificationRule(
