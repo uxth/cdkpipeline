@@ -70,7 +70,7 @@ class WmpPipelineStack(core.Stack):
             self,
             'SnsTopic',
             topic_name='SnsTopic',
-            display_name='WMP Automation Notifications'
+            display_name='WMP_Automation_Notifications'
         )
         emailSubscription = sns.Subscription(
             self,
@@ -104,14 +104,5 @@ class WmpPipelineStack(core.Stack):
                 notifications.PipelineEvent.MANUAL_APPROVAL_NEEDED,
                 notifications.PipelineEvent.MANUAL_APPROVAL_SUCCEEDED,
             ],
-            targets=[
-                # notifications.SlackChannel(chatops.SlackChannelConfiguration(
-                #     self,
-                #     'Slack',
-                #     configuration_name='Slack',
-                #     slack_workspace_id='TGK603YCB',
-                #     slack_channel_id='C023X8XKCF8'
-                # ))
-                notifications.SnsTopic(snsTopic)
-            ]
+            targets=[notifications.SnsTopic(snsTopic)]
         )
