@@ -17,7 +17,7 @@ class RdsStack(core.Stack):
             self, 'MapData',
             database_name=config.getValue('rds.database_name'),
             engine=rds.DatabaseInstanceEngine.postgres(
-                version=rds.PostgresEngineVersion.VER_13
+                version=rds.PostgresEngineVersion.VER_12
             ),
             vpc=vpc,
             port=config.getValue('rds.port'),
@@ -26,7 +26,7 @@ class RdsStack(core.Stack):
                 secret_name=config.getValue('rds.admin_secret_name')
             ),
             instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.STANDARD3,
+                ec2.InstanceClass.BURSTABLE2,
                 ec2.InstanceSize.SMALL
             ),
             multi_az=False,
