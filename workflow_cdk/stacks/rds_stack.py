@@ -42,7 +42,8 @@ class RdsStack(core.Stack):
             delete_automated_backups=True,
             deletion_protection=False,
             publicly_accessible=False,
-            removal_policy=core.RemovalPolicy(config.getValue('rds.removalPolicy'))
+            removal_policy=core.RemovalPolicy(config.getValue('rds.removalPolicy')),
+            iam_authentication=True
         )
         rdsInstance.connections.allow_from(
             other=eks_cluster.cluster,
