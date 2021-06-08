@@ -25,8 +25,8 @@
       "allocated_storage": 10,
       "max_allocated_storage": 50,
       "instanceClass": "BURSTABLE2",
-      "instanceSize": "SMALL",
-      "instances": 2,
+      "instanceSize": "LARGE",
+      "instances": 1,
       "removalPolicy": "DESTROY",
       "postgres_service": "workflow_cdk/yaml/dev/k8smanifests/rds/postgres_service.yaml",
       "manifest": {
