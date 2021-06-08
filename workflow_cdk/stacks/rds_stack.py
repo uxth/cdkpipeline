@@ -40,7 +40,8 @@ class RdsStack(core.Stack):
                     ec2.InstanceSize(config.getValue('rds.instanceSize'))
                 )
             ),
-            iam_authentication=True
+            iam_authentication=True,
+            port=config.getValue('rds.port')
         )
         rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
