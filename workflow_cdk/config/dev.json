@@ -17,6 +17,9 @@
         "desired_size": 2
       }
     },
+    "rds": {
+      "database_name": "MapRDS"
+    },
     "argo-workflow": {
       "release": "argo-workflow",
       "valuesPath": "workflow_cdk/yaml/dev/helm/argo-workflows/values.yaml",

@@ -4,14 +4,10 @@ from aws_cdk import (
     aws_ec2 as ec2,
     aws_iam as iam
 )
-from aws_cdk.aws_iam import PolicyDocument
-
 from utils.configBuilder import WmpConfig
 
 
-# noinspection PyTypeChecker
 class EksStack(core.Stack):
-    # noinspection PyTypeChecker
     def __init__(self, scope: core.Construct, construct_id: str, vpc: ec2.Vpc, config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         eks_user = iam.User(

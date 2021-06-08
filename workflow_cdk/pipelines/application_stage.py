@@ -9,6 +9,7 @@ from workflow_cdk.stacks.argo_workflows_stack import ArgoWorkflowsStack
 from workflow_cdk.stacks.eks_stack import EksStack
 from workflow_cdk.stacks.kafka_stack import KafkaStack
 from workflow_cdk.stacks.manifests_stack import ManifestsStack
+from workflow_cdk.stacks.rds_stack import RdsStack
 from workflow_cdk.stacks.vpc_stack import VpcStack
 
 
@@ -30,6 +31,15 @@ class WmpApplicationStage(core.Stage):
             config=config,
             env=env)
         eks_stack.add_dependency(vpc_stack)
+
+        rds_stack = RdsStack(
+            self, 'map-rds',
+            vpc=vpc_stack.vpc,
+            eksCluster=eks_stack.cluster,
+            config=config,
+            env=env
+        )
+        rds_stack.add_dependency(eks_stack)
 
         kafka_stack = KafkaStack(
             self, 'wmp-kafka',
