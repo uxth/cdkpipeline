@@ -23,7 +23,10 @@
       "admin_username": "map_rds_admin",
       "admin_secret_name": "map_rds_admin_secret",
       "allocated_storage": 10,
-      "max_allocated_storage": 50
+      "max_allocated_storage": 50,
+      "instanceClass": "BURSTABLE2",
+      "instanceSize": "SMALL",
+      "removalPolicy": "DESTROY"
     },
     "argo-workflow": {
       "release": "argo-workflow",

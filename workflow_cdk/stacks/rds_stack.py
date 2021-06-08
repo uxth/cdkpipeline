@@ -26,8 +26,8 @@ class RdsStack(core.Stack):
                 secret_name=config.getValue('rds.admin_secret_name')
             ),
             instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.BURSTABLE2,
-                ec2.InstanceSize.SMALL
+                ec2.InstanceClass(config.getValue('rds.instanceClass')),
+                ec2.InstanceSize(config.getValue('rds.instanceSize'))
             ),
             multi_az=False,
             allocated_storage=config.getValue('rds.allocated_storage'),
@@ -38,7 +38,7 @@ class RdsStack(core.Stack):
             delete_automated_backups=True,
             deletion_protection=False,
             publicly_accessible=False,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=core.RemovalPolicy(config.getValue('rds.removalPolicy'))
         )
         rdsInstance.connections.allow_from(
             other=eksCluster,

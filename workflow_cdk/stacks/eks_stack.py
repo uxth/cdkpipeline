@@ -2,7 +2,8 @@ from aws_cdk import (
     core,
     aws_eks as eks,
     aws_ec2 as ec2,
-    aws_iam as iam
+    aws_iam as iam,
+    aws_secretsmanager as secretmanager
 )
 from utils.configBuilder import WmpConfig
 
@@ -13,7 +14,7 @@ class EksStack(core.Stack):
         eks_user = iam.User(
             self, id="wmp-eks-user",
             user_name=config.getValue('eks.admin_username'),
-            password=core.SecretValue.plain_text(config.getValue('eks.admin_password'))  # this needs to be put in KMS
+            password=core.SecretValue.plain_text(config.getValue('eks.admin_password'))  # this need to be changed
         )
         policy = iam.Policy(
             self, id='wmp-eks-policy',
