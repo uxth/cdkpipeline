@@ -19,15 +19,18 @@ class RdsStack(core.Stack):
                 version=rds.PostgresEngineVersion.VER_13
             ),
             vpc=vpc,
-            port=3306,
-            credentials=rds.Credentials.from_generated_secret('map_rds_admin'),
+            port=config.getValue('rds.port'),
+            credentials=rds.Credentials.from_generated_secret(
+                username=config.getValue('rds.admin_username'),
+                secret_name=config.getValue('rds.admin_secret_name')
+            ),
             instance_type=ec2.InstanceType.of(
                 ec2.InstanceClass.MEMORY4,
-                ec2.InstanceSize.SMALL
+                ec2.InstanceSize.MEDIUM
             ),
             multi_az=False,
-            allocated_storage=10,
-            max_allocated_storage=50,
+            allocated_storage=config.getValue('rds.allocated_storage'),
+            max_allocated_storage=config.getValue('rds.max_allocated_storage'),
             allow_major_version_upgrade=False,
             auto_minor_version_upgrade=False,
             backup_retention=core.Duration.days(0),
@@ -36,4 +39,7 @@ class RdsStack(core.Stack):
             publicly_accessible=False,
             removal_policy=core.RemovalPolicy.DESTROY
         )
-        rdsInstance.connections.allow_from(other=eksCluster, port_range=ec2.Port.all_tcp())
+        rdsInstance.connections.allow_from(
+            other=eksCluster,
+            port_range=ec2.Port.all_tcp()
+        )
