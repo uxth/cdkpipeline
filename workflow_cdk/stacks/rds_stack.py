@@ -3,7 +3,8 @@ from aws_cdk import (
     aws_eks as eks,
     aws_ec2 as ec2,
     aws_iam as iam,
-    aws_rds as rds
+    aws_rds as rds,
+    aws_secretsmanager as secretemanager
 )
 from utils.configBuilder import WmpConfig
 
@@ -25,8 +26,8 @@ class RdsStack(core.Stack):
                 secret_name=config.getValue('rds.admin_secret_name')
             ),
             instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.MEMORY4,
-                ec2.InstanceSize.MEDIUM
+                ec2.InstanceClass.BURSTABLE3,
+                ec2.InstanceSize.MICRO
             ),
             multi_az=False,
             allocated_storage=config.getValue('rds.allocated_storage'),
