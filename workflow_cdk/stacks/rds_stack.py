@@ -51,13 +51,13 @@ class RdsStack(core.Stack):
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
         postgres_Service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
-        postgres_Service['spec']['externalName'] = rdsInstance.instance_endpoint.hostname + ":" + str(
-            rdsInstance.instance_endpoint.port)
+        postgres_Service['spec']['externalName'] = rdsInstance.instance_endpoint.hostname
         manifests.append(postgres_Service)
 
         eks.KubernetesManifest(
             self,
             id='rds-manifests',
             cluster=eks_cluster.cluster,
-            manifest=manifests
+            manifest=manifests,
+            overwrite=True
         )

@@ -18,5 +18,6 @@ class ManifestsStack(core.Stack):
             cluster=eks_stack.cluster,
             manifest=yamlParser.readManifest(
                 paths=config.getValue('manifests.files')
-            )
+            ),
+            overwrite=True
         )

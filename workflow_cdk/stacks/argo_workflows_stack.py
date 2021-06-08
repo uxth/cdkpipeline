@@ -15,7 +15,9 @@ class ArgoWorkflowsStack(core.Stack):
         eks.KubernetesManifest(
             self, id='manifest',
             cluster=eks_stack.cluster,
-            manifest=yamlParser.readManifest(paths=config.getValue('argo-workflow.manifests')))
+            manifest=yamlParser.readManifest(paths=config.getValue('argo-workflow.manifests')),
+            overwrite=True
+        )
 
         eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
