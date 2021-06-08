@@ -26,7 +26,12 @@
       "max_allocated_storage": 50,
       "instanceClass": "BURSTABLE2",
       "instanceSize": "SMALL",
-      "removalPolicy": "DESTROY"
+      "removalPolicy": "DESTROY",
+      "manifest": {
+        "files": [
+          "workflow_cdk/yaml/dev/k8smanifests/rds/postgres.yaml"
+        ]
+      }
     },
     "argo-workflow": {
       "release": "argo-workflow",

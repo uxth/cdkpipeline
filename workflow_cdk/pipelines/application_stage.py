@@ -27,15 +27,15 @@ class WmpApplicationStage(core.Stage):
 
         eks_stack = EksStack(
             self, 'wmp-eks',
-            vpc=vpc_stack.vpc,
+            vpc_stack=vpc_stack,
             config=config,
             env=env)
         eks_stack.add_dependency(vpc_stack)
 
         rds_stack = RdsStack(
             self, 'map-rds',
-            vpc=vpc_stack.vpc,
-            eksCluster=eks_stack.cluster,
+            vpc_stack=vpc_stack,
+            eks_cluster=eks_stack,
             config=config,
             env=env
         )

@@ -6,11 +6,15 @@ from aws_cdk import (
     aws_rds as rds,
     aws_secretsmanager as secretemanager
 )
+
+from utils import yamlParser
 from utils.configBuilder import WmpConfig
+from workflow_cdk.stacks.eks_stack import EksStack
+from workflow_cdk.stacks.vpc_stack import VpcStack
 
 
 class RdsStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, vpc: ec2.Vpc, eksCluster: eks.Cluster,
+    def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, eks_cluster: EksStack,
                  config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         rdsInstance = rds.DatabaseInstance(
@@ -19,7 +23,7 @@ class RdsStack(core.Stack):
             engine=rds.DatabaseInstanceEngine.postgres(
                 version=rds.PostgresEngineVersion.VER_12
             ),
-            vpc=vpc,
+            vpc=vpc_stack.vpc,
             port=config.getValue('rds.port'),
             credentials=rds.Credentials.from_generated_secret(
                 username=config.getValue('rds.admin_username'),
@@ -41,6 +45,16 @@ class RdsStack(core.Stack):
             removal_policy=core.RemovalPolicy(config.getValue('rds.removalPolicy'))
         )
         rdsInstance.connections.allow_from(
-            other=eksCluster,
+            other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
+        )
+
+        manifest = yamlParser.readManifest(config.getValue('rds.manifest.files'))
+        manifest[1]['spec']['externalName'] = rdsInstance.instance_endpoint.hostname
+
+        eks.KubernetesManifest(
+            self,
+            id='rds-manifests',
+            cluster=eks_cluster.cluster,
+            manifest=manifest
         )

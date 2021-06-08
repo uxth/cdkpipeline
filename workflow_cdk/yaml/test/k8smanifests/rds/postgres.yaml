@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rds
+  labels:
+    name: rds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-service
+  name: postgres-service
+  namespace: rds
+spec:
+  externalName: PLACE_HOLDER
+  selector:
+    app: postgres-service
+  type: ExternalName
+status:
+  loadBalancer: {}

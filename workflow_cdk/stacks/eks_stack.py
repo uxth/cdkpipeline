@@ -6,10 +6,12 @@ from aws_cdk import (
     aws_secretsmanager as secretmanager
 )
 from utils.configBuilder import WmpConfig
+from workflow_cdk.stacks.vpc_stack import VpcStack
 
 
 class EksStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, vpc: ec2.Vpc, config: WmpConfig, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, config: WmpConfig, **kwargs) -> \
+            None:
         super().__init__(scope, construct_id, **kwargs)
         eks_user = iam.User(
             self, id="wmp-eks-user",
@@ -40,7 +42,7 @@ class EksStack(core.Stack):
             self, id='wmp-eks-cluster',
             cluster_name=config.getValue('eks.cluster_name'),
             version=eks.KubernetesVersion.V1_19,
-            vpc=vpc,
+            vpc=vpc_stack.vpc,
             vpc_subnets=[ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE)],
             default_capacity=0,
             masters_role=eks_role

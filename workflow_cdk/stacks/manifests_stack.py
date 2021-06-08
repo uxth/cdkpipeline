@@ -9,7 +9,8 @@ from utils import yamlParser
 
 
 class ManifestsStack(core.Stack):
-    def __init__(self, scope: core.Construct, id: str, eks_stack: EksStack, config: WmpConfig, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, id: str, eks_stack: EksStack, config: WmpConfig,
+                 **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         eks.KubernetesManifest(
             self,
