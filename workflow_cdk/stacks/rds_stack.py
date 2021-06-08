@@ -17,43 +17,39 @@ class RdsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, eks_cluster: EksStack,
                  config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        rdsInstance = rds.DatabaseInstance(
-            self, 'MapData',
-            database_name=config.getValue('rds.database_name'),
-            engine=rds.DatabaseInstanceEngine.postgres(
-                version=rds.PostgresEngineVersion.VER_12
+        rds_cluster = rds.DatabaseCluster(
+            self,
+            config.getValue('rds.database_name'),
+            default_database_name=config.getValue('rds.database_name'),
+            engine=rds.DatabaseClusterEngine.aurora_postgres(
+                version=rds.AuroraPostgresEngineVersion.VER_12_4
             ),
-            vpc=vpc_stack.vpc,
-            port=config.getValue('rds.port'),
             credentials=rds.Credentials.from_generated_secret(
                 username=config.getValue('rds.admin_username'),
                 secret_name=config.getValue('rds.admin_secret_name')
             ),
-            instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass(config.getValue('rds.instanceClass')),
-                ec2.InstanceSize(config.getValue('rds.instanceSize'))
-            ),
-            multi_az=False,
-            allocated_storage=config.getValue('rds.allocated_storage'),
-            max_allocated_storage=config.getValue('rds.max_allocated_storage'),
-            allow_major_version_upgrade=False,
-            auto_minor_version_upgrade=False,
-            backup_retention=core.Duration.days(0),
-            delete_automated_backups=True,
-            deletion_protection=False,
-            publicly_accessible=False,
-            removal_policy=core.RemovalPolicy(config.getValue('rds.removalPolicy')),
-            iam_authentication=True
+            instances=config.getValue('rds.instances'),
+            instance_props=rds.InstanceProps(
+                vpc=vpc_stack.vpc,
+                allow_major_version_upgrade=False,
+                auto_minor_version_upgrade=False,
+                delete_automated_backups=True,
+                publicly_accessible=True,
+                instance_type=ec2.InstanceType.of(
+                    ec2.InstanceClass(config.getValue('rds.instanceClass')),
+                    ec2.InstanceSize(config.getValue('rds.instanceSize'))
+                )
+            )
         )
-        rdsInstance.connections.allow_from(
+        rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
-        postgres_Service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
-        postgres_Service['spec']['externalName'] = rdsInstance.instance_endpoint.hostname
-        manifests.append(postgres_Service)
+        postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
+        postgres_service['spec']['externalName'] = rds_cluster.cluster_endpoint.hostname
+        manifests.append(postgres_service)
 
         eks.KubernetesManifest(
             self,
