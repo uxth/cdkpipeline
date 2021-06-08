@@ -21,7 +21,7 @@
       "database_name": "MapRDS",
       "port": 5432,
       "admin_username": "map_rds_admin",
-      "admin_secret_name": "map_rds_admin_secret",
+      "admin_secret_name": "map_rds_admin",
       "allocated_storage": 10,
       "max_allocated_storage": 50,
       "instanceClass": "BURSTABLE2",
