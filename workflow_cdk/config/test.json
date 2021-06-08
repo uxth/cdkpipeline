@@ -27,9 +27,10 @@
       "instanceClass": "BURSTABLE2",
       "instanceSize": "SMALL",
       "removalPolicy": "DESTROY",
+      "postgres_service": "workflow_cdk/yaml/dev/k8smanifests/rds/postgres_service.yaml",
       "manifest": {
         "files": [
-          "workflow_cdk/yaml/test/k8smanifests/rds/postgres.yaml"
+          "workflow_cdk/yaml/dev/k8smanifests/rds/namespace.yaml"
         ]
       }
     },
