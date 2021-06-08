@@ -26,8 +26,8 @@ class RdsStack(core.Stack):
                 secret_name=config.getValue('rds.admin_secret_name')
             ),
             instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.BURSTABLE3,
-                ec2.InstanceSize.MICRO
+                ec2.InstanceClass.STANDARD3,
+                ec2.InstanceSize.SMALL
             ),
             multi_az=False,
             allocated_storage=config.getValue('rds.allocated_storage'),
