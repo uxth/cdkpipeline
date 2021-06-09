@@ -36,10 +36,11 @@ class RdsStack(core.Stack):
                 auto_minor_version_upgrade=False,
                 delete_automated_backups=True,
                 publicly_accessible=True,
-                instance_type=ec2.InstanceType.of(
-                    ec2.InstanceClass(config.getValue('rds.instanceClass')),
-                    ec2.InstanceSize(config.getValue('rds.instanceSize'))
-                )
+                # instance_type=ec2.InstanceType.of(
+                #     ec2.InstanceClass(config.getValue('rds.instanceClass')),
+                #     ec2.InstanceSize(config.getValue('rds.instanceSize'))
+                # )
+                instance_type=ec2.InstanceType('db.m5.large')
             ),
             iam_authentication=True,
             port=config.getValue('rds.port')
