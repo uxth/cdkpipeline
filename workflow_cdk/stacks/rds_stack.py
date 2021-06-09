@@ -17,6 +17,7 @@ class RdsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, eks_cluster: EksStack,
                  config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
