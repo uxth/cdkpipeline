@@ -24,7 +24,7 @@
       "admin_secret_name": "map_rds_admin",
       "allocated_storage": 10,
       "max_allocated_storage": 50,
-      "instanceClass": "MEMORY3",
+      "instanceClass": "BURSTABLE3",
       "instanceSize": "XLARGE",
       "instances": 1,
       "removalPolicy": "DESTROY",
