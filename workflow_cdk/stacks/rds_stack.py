@@ -22,7 +22,7 @@ class RdsStack(core.Stack):
             config.getValue('rds.database_name'),
             default_database_name=config.getValue('rds.database_name'),
             engine=rds.DatabaseClusterEngine.aurora_postgres(
-                version=rds.AuroraPostgresEngineVersion.VER_11_9
+                version=rds.AuroraPostgresEngineVersion.VER_12_4
             ),
             credentials=rds.Credentials.from_generated_secret(
                 username=config.getValue('rds.admin_username'),
