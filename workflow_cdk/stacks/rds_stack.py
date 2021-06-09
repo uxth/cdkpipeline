@@ -40,7 +40,7 @@ class RdsStack(core.Stack):
                 #     ec2.InstanceClass(config.getValue('rds.instanceClass')),
                 #     ec2.InstanceSize(config.getValue('rds.instanceSize'))
                 # )
-                instance_type=ec2.InstanceType('db.t3.medium')
+                instance_type=ec2.InstanceType('t3.medium')
             ),
             iam_authentication=True,
             port=config.getValue('rds.port')
