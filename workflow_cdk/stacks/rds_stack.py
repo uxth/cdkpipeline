@@ -24,7 +24,7 @@ class RdsStack(core.Stack):
             security_group_name='SanDiegoOfficeSG'
         )
         security_group.add_ingress_rule(
-            ec2.Peer.any_ipv4,
+            ec2.Peer.any_ipv4(),
             ec2.Port.tcp(config.getValue('rds.port'))
         )
 
