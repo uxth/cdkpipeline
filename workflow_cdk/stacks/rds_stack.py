@@ -17,7 +17,16 @@ class RdsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, eks_cluster: EksStack,
                  config: WmpConfig, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-
+        security_group = ec2.SecurityGroup(
+            self,
+            'SanDiegoOfficeSG',
+            vpc=vpc_stack.vpc,
+            security_group_name='SanDiegoOfficeSG'
+        )
+        security_group.add_ingress_rule(
+            ec2.Peer.ipv4('64.187.215.19/16'),
+            ec2.Port.all_tcp()
+        )
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
@@ -36,6 +45,7 @@ class RdsStack(core.Stack):
                 auto_minor_version_upgrade=False,
                 delete_automated_backups=True,
                 publicly_accessible=True,
+                security_groups=[security_group],
                 instance_type=ec2.InstanceType(config.getValue('rds.instanceType'))
             ),
             iam_authentication=True,
@@ -44,17 +54,6 @@ class RdsStack(core.Stack):
         rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
-        )
-
-        security_group = ec2.SecurityGroup(
-            self,
-            'OfficeSG',
-            vpc=vpc_stack.vpc,
-            security_group_name='OfficeSG'
-        )
-        security_group.add_ingress_rule(
-            ec2.Peer.ipv4('64.187.215.19/16'),
-            ec2.Port.all_tcp()
         )
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
