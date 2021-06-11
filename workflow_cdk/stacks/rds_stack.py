@@ -27,6 +27,7 @@ class RdsStack(core.Stack):
             ec2.Peer.ipv4('64.187.215.19/32'),
             ec2.Port.all_tcp()
         )
+
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
@@ -49,7 +50,17 @@ class RdsStack(core.Stack):
                 instance_type=ec2.InstanceType(config.getValue('rds.instanceType'))
             ),
             iam_authentication=True,
-            port=config.getValue('rds.port')
+            port=config.getValue('rds.port'),
+            subnet_group=rds.SubnetGroup(
+                self,
+                'rds_subnet_group',
+                subnet_group_name='rds_subnet_group',
+                vpc=vpc_stack.vpc,
+                removal_policy=core.RemovalPolicy.DESTROY,
+                vpc_subnets=ec2.SubnetSelection(
+                    subnet_type=ec2.SubnetType.PUBLIC
+                )
+            )
         )
         rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
