@@ -52,8 +52,10 @@ class RdsStack(core.Stack):
             vpc=vpc_stack.vpc,
             security_group_name='OfficeSG'
         )
-        security_group.connections.allow_from_any_ipv4(port_range=ec2.Port.all_tcp())
-        security_group.connections.allow_to(rds_cluster, ec2.Port.tcp(config.getValue('rds.port')), 'RDS')
+        security_group.add_ingress_rule(
+            ec2.Peer.ipv4('64.187.215.19/16'),
+            ec2.Port.all_tcp()
+        )
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
         postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
