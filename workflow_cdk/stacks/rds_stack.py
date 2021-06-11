@@ -25,7 +25,7 @@ class RdsStack(core.Stack):
         )
         security_group.add_ingress_rule(
             ec2.Peer.ipv4('64.187.215.19/32'),
-            ec2.Port.all_tcp()
+            ec2.Port.tcp(config.getValue('rds.port'))
         )
 
         rds_cluster = rds.DatabaseCluster(
@@ -65,7 +65,7 @@ class RdsStack(core.Stack):
         )
         rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
-            port_range=ec2.Port.all_tcp()
+            port_range=ec2.Port.tcp(config.getValue('rds.port'))
         )
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
