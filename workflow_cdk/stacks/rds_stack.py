@@ -36,11 +36,7 @@ class RdsStack(core.Stack):
                 auto_minor_version_upgrade=False,
                 delete_automated_backups=True,
                 publicly_accessible=True,
-                # instance_type=ec2.InstanceType.of(
-                #     ec2.InstanceClass(config.getValue('rds.instanceClass')),
-                #     ec2.InstanceSize(config.getValue('rds.instanceSize'))
-                # )
-                instance_type=ec2.InstanceType('t3.medium')
+                instance_type=ec2.InstanceType(config.getValue('rds.instanceType'))
             ),
             iam_authentication=True,
             port=config.getValue('rds.port')
@@ -49,6 +45,14 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
+
+        security_group = ec2.SecurityGroup(
+            self,
+            'OfficeSG',
+            vpc=vpc_stack.vpc,
+            security_group_name='OfficeSG'
+        )
+        security_group.connections.allow_to(rds_cluster, ec2.Port.tcp(config.getValue('rds.port')), 'RDS')
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
         postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
