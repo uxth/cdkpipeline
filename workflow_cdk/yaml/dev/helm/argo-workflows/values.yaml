@@ -183,7 +183,7 @@ server:
       drop:
         - ALL
   name: server
-  serviceType: LoadBalancer
+  serviceType: ClusterIP
   servicePort: 2746
   # servicePortName: http
   serviceAccount:

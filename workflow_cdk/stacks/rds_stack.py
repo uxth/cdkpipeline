@@ -52,6 +52,7 @@ class RdsStack(core.Stack):
             vpc=vpc_stack.vpc,
             security_group_name='OfficeSG'
         )
+        security_group.connections.allow_from_any_ipv4(port_range=ec2.Port.all_tcp())
         security_group.connections.allow_to(rds_cluster, ec2.Port.tcp(config.getValue('rds.port')), 'RDS')
 
         manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
