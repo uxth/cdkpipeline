@@ -55,6 +55,7 @@ class RdsStack(core.Stack):
                 self,
                 'rds_subnet_group',
                 subnet_group_name='rds_subnet_group',
+                description='This is the subnet group for Tusimple Office access.',
                 vpc=vpc_stack.vpc,
                 removal_policy=core.RemovalPolicy.DESTROY,
                 vpc_subnets=ec2.SubnetSelection(
