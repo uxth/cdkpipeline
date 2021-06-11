@@ -3,7 +3,7 @@
     "AWSAccountID": "711208530951",
     "AWSProfileRegion": "us-west-2",
     "vpc": {
-      "cidr": "10.0.0.0/16"
+      "cidr": "172.30.104.0/21"
     },
     "eks": {
       "admin_username": "wmp-eks-cluster-admin",
