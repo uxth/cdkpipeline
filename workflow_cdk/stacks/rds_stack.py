@@ -73,7 +73,7 @@ class RdsStack(core.Stack):
                 vpc=vpc_stack.vpc,
                 removal_policy=core.RemovalPolicy.DESTROY,
                 vpc_subnets=ec2.SubnetSelection(
-                    subnet_type=ec2.SubnetType.PRIVATE
+                    subnet_type=ec2.SubnetType.PUBLIC
                 )
             )
         )
