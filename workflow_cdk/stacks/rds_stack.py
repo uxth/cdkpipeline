@@ -23,11 +23,25 @@ class RdsStack(core.Stack):
             vpc=vpc_stack.vpc,
             security_group_name='SanDiegoOfficeSG'
         )
+
         security_group.add_ingress_rule(
-            ec2.Peer.any_ipv4(),
+            ec2.Peer.ipv4('10.160.0.0/16'),
             ec2.Port.tcp(config.getValue('rds.port'))
         )
 
+        security_group.add_ingress_rule(
+            ec2.Peer.ipv4('10.162.0.0/16'),
+            ec2.Port.tcp(config.getValue('rds.port'))
+        )
+
+        security_group.add_ingress_rule(
+            ec2.Peer.ipv4('10.161.48.0/22'),
+            ec2.Port.tcp(config.getValue('rds.port'))
+        )
+        security_group.add_ingress_rule(
+            ec2.Peer.ipv4('64.187.215.19/32'),
+            ec2.Port.tcp(config.getValue('rds.port'))
+        )
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
@@ -55,11 +69,11 @@ class RdsStack(core.Stack):
                 self,
                 'rds_subnet_group',
                 subnet_group_name='rds_subnet_group',
-                description='This is the subnet group for Tusimple Office access.',
+                description='This is the subnet group for TuSimple Office access.',
                 vpc=vpc_stack.vpc,
                 removal_policy=core.RemovalPolicy.DESTROY,
                 vpc_subnets=ec2.SubnetSelection(
-                    subnet_type=ec2.SubnetType.PUBLIC
+                    subnet_type=ec2.SubnetType.PRIVATE
                 )
             )
         )
@@ -67,16 +81,16 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
-
-        manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
-        postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
-        postgres_service['spec']['externalName'] = rds_cluster.cluster_endpoint.hostname
-        manifests.append(postgres_service)
-
-        eks.KubernetesManifest(
-            self,
-            id='rds-manifests',
-            cluster=eks_cluster.cluster,
-            manifest=manifests,
-            overwrite=True
-        )
+        #
+        # manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
+        # postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
+        # postgres_service['spec']['externalName'] = rds_cluster.cluster_endpoint.hostname
+        # manifests.append(postgres_service)
+        #
+        # eks.KubernetesManifest(
+        #     self,
+        #     id='rds-manifests',
+        #     cluster=eks_cluster.cluster,
+        #     manifest=manifests,
+        #     overwrite=True
+        # )
