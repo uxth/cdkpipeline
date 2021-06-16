@@ -11,8 +11,14 @@ class VpcStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         # The code that defines your stack goes here
-        self.vpc = ec2.Vpc(
+        # self.vpc = ec2.Vpc(
+        #     self,
+        #     "wmp-vpc",
+        #     cidr=config.getValue('vpc.cidr')
+        # )
+        self.vpc = ec2.Vpc.from_lookup(
             self,
-            "wmp-vpc",
-            cidr=config.getValue('vpc.cidr')
+            'tu-map-test-main',
+            vpc_id='vpc-0d303cb065d804acc',
+            vpc_name='tu-map-test-main'
         )
