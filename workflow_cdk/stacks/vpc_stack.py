@@ -17,8 +17,7 @@ class VpcStack(core.Stack):
         #     cidr=config.getValue('vpc.cidr')
         # )
         self.vpc = ec2.Vpc.from_lookup(
-            self,
-            'tu-map-test-main',
-            vpc_id='vpc-0d303cb065d804acc',
-            vpc_name='tu-map-test-main'
+            self, 'defaultVpc',
+            vpc_id=config.getValue('vpc.vpc_id'),
+            vpc_name=config.getValue('vpc.vpc_name')
         )

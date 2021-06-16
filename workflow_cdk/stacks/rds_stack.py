@@ -38,10 +38,7 @@ class RdsStack(core.Stack):
             ec2.Peer.ipv4('10.161.48.0/22'),
             ec2.Port.tcp(config.getValue('rds.port'))
         )
-        security_group.add_ingress_rule(
-            ec2.Peer.ipv4('64.187.215.19/32'),
-            ec2.Port.tcp(config.getValue('rds.port'))
-        )
+
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
