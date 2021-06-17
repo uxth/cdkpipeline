@@ -78,16 +78,3 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
-        #
-        # manifests = yamlParser.readManifest(config.getValue('rds.manifest.files'))
-        # postgres_service = yamlParser.readYaml(config.getValue('rds.postgres_service'))
-        # postgres_service['spec']['externalName'] = rds_cluster.cluster_endpoint.hostname
-        # manifests.append(postgres_service)
-        #
-        # eks.KubernetesManifest(
-        #     self,
-        #     id='rds-manifests',
-        #     cluster=eks_cluster.cluster,
-        #     manifest=manifests,
-        #     overwrite=True
-        # )

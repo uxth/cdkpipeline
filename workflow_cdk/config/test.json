@@ -26,13 +26,7 @@
       "max_allocated_storage": 50,
       "instanceType": "t3.medium",
       "instances": 1,
-      "removalPolicy": "DESTROY",
-      "postgres_service": "workflow_cdk/yaml/dev/k8smanifests/rds/postgres_service.yaml",
-      "manifest": {
-        "files": [
-          "workflow_cdk/yaml/dev/k8smanifests/rds/namespace.yaml"
-        ]
-      }
+      "removalPolicy": "DESTROY"
     },
     "argo-workflow": {
       "release": "argo-workflow",
