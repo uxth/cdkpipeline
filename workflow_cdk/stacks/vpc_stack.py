@@ -16,6 +16,7 @@ class VpcStack(core.Stack):
         #     "wmp-vpc",
         #     cidr=config.getValue('vpc.cidr')
         # )
+
         self.vpc = ec2.Vpc.from_lookup(
             self, 'defaultVpc',
             vpc_id=config.getValue('vpc.vpc_id'),
