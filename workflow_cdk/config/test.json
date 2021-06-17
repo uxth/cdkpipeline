@@ -3,7 +3,7 @@
     "AWSAccountID": "711208530951",
     "AWSProfileRegion": "us-west-2",
     "vpc": {
-      "cidr": "172.30.104.0/21",
+      "cidr": "10.0.0.0/16",
       "vpc_id": "vpc-0d303cb065d804acc",
       "vpc_name": "tu-map-test-main"
     },

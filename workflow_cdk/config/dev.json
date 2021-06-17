@@ -3,7 +3,7 @@
     "AWSAccountID": "182732313984",
     "AWSProfileRegion": "us-west-2",
     "vpc": {
-      "cidr": "172.30.184.0/21",
+      "cidr": "10.0.0.0/16",
       "vpc_id": "vpc-009740c1d24817532",
       "vpc_name": "default"
     },
