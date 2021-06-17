@@ -56,7 +56,7 @@ class RdsStack(core.Stack):
                 allow_major_version_upgrade=False,
                 auto_minor_version_upgrade=False,
                 delete_automated_backups=True,
-                publicly_accessible=True,
+                publicly_accessible=False,
                 security_groups=[security_group],
                 instance_type=ec2.InstanceType(config.getValue('rds.instanceType'))
             ),
