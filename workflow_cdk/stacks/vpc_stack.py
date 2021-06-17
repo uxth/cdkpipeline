@@ -11,13 +11,13 @@ class VpcStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         # The code that defines your stack goes here
-        self.vpc = ec2.Vpc(
-            self,
-            "wmp-vpc",
-            cidr=config.getValue('vpc.cidr')
-        )
-        # self.vpc = ec2.Vpc.from_lookup(
-        #     self, 'defaultVpc',
-        #     vpc_id=config.getValue('vpc.vpc_id'),
-        #     # vpc_name=config.getValue('vpc.vpc_name')
+        # self.vpc = ec2.Vpc(
+        #     self,
+        #     "wmp-vpc",
+        #     cidr=config.getValue('vpc.cidr')
         # )
+        self.vpc = ec2.Vpc.from_lookup(
+            self, 'defaultVpc',
+            vpc_id=config.getValue('vpc.vpc_id'),
+            # vpc_name=config.getValue('vpc.vpc_name')
+        )
