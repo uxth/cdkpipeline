@@ -1,0 +1,149 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wmp
+  labels:
+    app: wmp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wmp
+  namespace: wmp
+  labels:
+    app: wmp
+spec:
+  selector:
+    matchLabels:
+      app: wmp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wmp
+    spec:
+      containers:
+      - name: wmp
+        image: 711208530951.dkr.ecr.us-west-2.amazonaws.com/map_wmp:latest
+        # env:
+        # - name: PORT
+        #   value: 8080
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wmp
+  namespace: wmp
+  labels:
+    app: wmp
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: wmp
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wmp
+  namespace: wmp
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: wmp-role
+  namespace: workflows
+rules:
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+      - get
+      - update
+  - apiGroups:
+      - ""
+      - "argoproj.io"
+    resources:
+      - pods
+      - pods/exec
+      - pods/log
+      - workflows
+      - workflowtemplates
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumeclaims
+    verbs:
+      - create
+      - delete
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+    verbs:
+      - create
+      - get
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: wmp-binding
+  namespace: workflows
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: wmp-role
+subjects:
+  - kind: ServiceAccount
+    name: wmp
+    namespace: wmp
+  - kind: ServiceAccount
+    name: default
+    namespace: wmp
+  - kind: ServiceAccount
+    name: default
+    namespace: workflows

@@ -1,19 +1,17 @@
-from aws_cdk import (
-    core,
-    aws_codepipeline as codepipeline,
-    aws_codepipeline_actions as codepipeline_actions,
-    pipelines as pipelines,
-    aws_sns as sns
-)
+from aws_cdk import aws_codepipeline as codepipeline
+from aws_cdk import aws_codepipeline_actions as codepipeline_actions
+from aws_cdk import aws_sns as sns
+from aws_cdk import core
+from aws_cdk import pipelines as pipelines
+from cdk.common.pipeline.application_stage import ApplicationStage
 from cloudcomponents import (
     cdk_developer_tools_notifications as notifications
 )
 
-from utils.configBuilder import WmpConfig
-from workflow_cdk.pipelines.application_stage import WmpApplicationStage
+from utils.configBuilder import Config
 
 
-class WmpPipelineStack(core.Stack):
+class PipelineStack(core.Stack):
 
     def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -40,7 +38,7 @@ class WmpPipelineStack(core.Stack):
                 cloud_assembly_artifact=cloud_assembly_artifact,
                 source_artifact=source_artifact,
                 install_commands=[
-                    "mkdir -p wmp_cdk",
+                    "mkdir -p map_cdk",
                     "npm install -g aws-cdk",
                     "pip install -r requirements.txt"
                 ]
@@ -49,20 +47,20 @@ class WmpPipelineStack(core.Stack):
         )
 
         teststage = pipeline.add_application_stage(
-            WmpApplicationStage(
+            ApplicationStage(
                 self,
                 'Test-Stage',
-                config=WmpConfig('workflow_cdk/config/test.json', 'wmp-config')
+                config=Config('config/test.json')
             ),
             manual_approvals=False
         )
         teststage.add_manual_approval_action(action_name='Ready_To_Move_To_Next_Stage')
 
         devstage = pipeline.add_application_stage(
-            WmpApplicationStage(
+            ApplicationStage(
                 self,
                 'Dev-Stage',
-                config=WmpConfig('workflow_cdk/config/dev.json', 'wmp-config')
+                config=Config('config/dev.json')
             )
         )
 

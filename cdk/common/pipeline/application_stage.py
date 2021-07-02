@@ -1,32 +1,30 @@
 
-from aws_cdk import (
-    core
-)
+from aws_cdk import core
+from cdk.apps.wmp.stacks.argo_events import ArgoEventsStack
+from cdk.apps.wmp.stacks.manifests import ManifestsStack
+from cdk.apps.wmp.stacks.argo_workflows import ArgoWorkflowsStack
+from cdk.common.stacks.eks import EksStack
+from cdk.apps.wmp.stacks.kafka import KafkaStack
+from cdk.common.stacks.rds import RdsStack
+from cdk.common.stacks.vpc import VpcStack
 
-from utils.configBuilder import WmpConfig
-from workflow_cdk.stacks.argo_events_stack import ArgoEventsStack
-from workflow_cdk.stacks.argo_workflows_stack import ArgoWorkflowsStack
-from workflow_cdk.stacks.eks_stack import EksStack
-from workflow_cdk.stacks.kafka_stack import KafkaStack
-from workflow_cdk.stacks.manifests_stack import ManifestsStack
-from workflow_cdk.stacks.rds_stack import RdsStack
-from workflow_cdk.stacks.vpc_stack import VpcStack
+from utils.configBuilder import Config
 
 
-class WmpApplicationStage(core.Stage):
-    def __init__(self, scope: core.Construct, id: str, config: WmpConfig, **kwargs):
+class ApplicationStage(core.Stage):
+    def __init__(self, scope: core.Construct, id: str, config: Config, **kwargs):
         super().__init__(scope, id, **kwargs)
         env = core.Environment(
-            account=config.getValue('AWSAccountID'),
-            region=config.getValue('AWSProfileRegion')
+            account=config.getValue('common.AWSAccountID'),
+            region=config.getValue('common.AWSProfileRegion')
         )
         vpc_stack = VpcStack(
-            self, "wmp-vpc",
+            self, "map-vpc",
             config=config,
             env=env)
 
         eks_stack = EksStack(
-            self, 'wmp-eks',
+            self, 'map-eks',
             vpc_stack=vpc_stack,
             config=config,
             env=env)
@@ -42,21 +40,21 @@ class WmpApplicationStage(core.Stage):
         rds_stack.add_dependency(eks_stack)
 
         kafka_stack = KafkaStack(
-            self, 'wmp-kafka',
+            self, 'kafka',
             eks_stack=eks_stack,
             config=config,
             env=env)
         kafka_stack.add_dependency(eks_stack)
 
         argo_workflows_stack = ArgoWorkflowsStack(
-            self, 'wmp-argo-workflows',
+            self, 'argo-workflows',
             eks_stack=eks_stack,
             config=config,
             env=env)
         argo_workflows_stack.add_dependency(eks_stack)
 
         argo_events_stack = ArgoEventsStack(
-            self, 'wmp-argo-events',
+            self, 'argo-events',
             eks_stack=eks_stack,
             config=config,
             env=env)

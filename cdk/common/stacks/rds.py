@@ -1,21 +1,15 @@
-from aws_cdk import (
-    core,
-    aws_eks as eks,
-    aws_ec2 as ec2,
-    aws_iam as iam,
-    aws_rds as rds,
-    aws_secretsmanager as secretemanager
-)
+from aws_cdk import aws_ec2 as ec2
+from aws_cdk import aws_rds as rds
+from aws_cdk import core
+from cdk.common.stacks.eks import EksStack
+from cdk.common.stacks.vpc import VpcStack
 
-from utils import yamlParser
-from utils.configBuilder import WmpConfig
-from workflow_cdk.stacks.eks_stack import EksStack
-from workflow_cdk.stacks.vpc_stack import VpcStack
+from utils.configBuilder import Config
 
 
 class RdsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, eks_cluster: EksStack,
-                 config: WmpConfig, **kwargs) -> None:
+                 config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         security_group = ec2.SecurityGroup(
             self,
