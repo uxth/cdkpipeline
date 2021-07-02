@@ -20,7 +20,7 @@ class PipelineStack(core.Stack):
         cloud_assembly_artifact = codepipeline.Artifact()
 
         pipeline = pipelines.CdkPipeline(
-            self, "Pipeline",
+            self, "MapPipeline",
             pipeline_name="Map_Infrastructure_Codepipeline",
             cloud_assembly_artifact=cloud_assembly_artifact,
             source_action=codepipeline_actions.BitBucketSourceAction(
