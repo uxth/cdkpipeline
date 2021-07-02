@@ -7,13 +7,12 @@
 import os
 
 from aws_cdk import core
-
-from workflow_cdk.pipelines.pipeline_stack import WmpPipelineStack
+from cdk.common.pipeline.pipeline_stack import PipelineStack
 
 app = core.App()
-WmpPipelineStack(
+PipelineStack(
     app,
-    'WmpPipelineStack',
+    'PipelineStack',
     env=core.Environment(
         account=os.environ['CDK_DEFAULT_ACCOUNT'],
         region=os.environ['CDK_DEFAULT_REGION']

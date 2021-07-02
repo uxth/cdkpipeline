@@ -6,17 +6,17 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="wmp_cdk",
+    name="map_cdk",
     version="0.0.1",
 
-    description="An empty CDK Python app",
+    description="Map AWS Infrastructure",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    author="author",
+    author="Ning Xu",
 
-    package_dir={"": "wmp_cdk"},
-    packages=setuptools.find_packages(where="wmp_cdk"),
+    package_dir={"": "map_cdk"},
+    packages=setuptools.find_packages(where="map_cdk"),
 
     install_requires=[
         "aws-cdk.core==1.104.0",

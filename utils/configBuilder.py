@@ -1,15 +1,12 @@
 import json
+
 from dictor import dictor
 
 
-class WmpConfig:
-    def __init__(self, path: str, env: str):
-        # default to test if no env provided
-        if not env:
-            env = "test"
-
+class Config:
+    def __init__(self, path: str):
         with open(path) as f:
-            self.data = json.load(f)[env]
+            self.data = json.load(f)
 
     def getValue(self, path: str):
         res = dictor(self.data, path)

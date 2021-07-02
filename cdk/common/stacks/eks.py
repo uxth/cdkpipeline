@@ -1,25 +1,24 @@
-from aws_cdk import (
-    core,
-    aws_eks as eks,
-    aws_ec2 as ec2,
-    aws_iam as iam,
-    aws_secretsmanager as secretmanager
-)
-from utils.configBuilder import WmpConfig
-from workflow_cdk.stacks.vpc_stack import VpcStack
+from aws_cdk import aws_ec2 as ec2
+from aws_cdk import aws_eks as eks
+from aws_cdk import aws_iam as iam
+from aws_cdk import core
+from cdk.common.stacks.vpc import VpcStack
+
+from utils.configBuilder import Config
+from utils.randGenerator import stringGenerator
 
 
 class EksStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, config: WmpConfig, **kwargs) -> \
+    def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, config: Config, **kwargs) -> \
             None:
         super().__init__(scope, construct_id, **kwargs)
         eks_user = iam.User(
-            self, id="wmp-eks-user",
+            self, id="map-eks-user",
             user_name=config.getValue('eks.admin_username'),
-            password=core.SecretValue.plain_text(config.getValue('eks.admin_password'))  # this need to be changed
+            password=core.SecretValue.plain_text(stringGenerator(24))  # this need to be changed
         )
         policy = iam.Policy(
-            self, id='wmp-eks-policy',
+            self, id='map-eks-policy',
             policy_name='EKSFullAccessPolicy',
             statements=[
                 iam.PolicyStatement(
@@ -33,13 +32,13 @@ class EksStack(core.Stack):
         )
 
         eks_role = iam.Role(
-            self, id="wmp-eks-admin",
+            self, id="map-eks-admin",
             assumed_by=iam.ArnPrincipal(arn=eks_user.user_arn),
-            role_name='wmp-eks-cluster-role'
+            role_name='map-eks-cluster-role'
         )
 
         self.cluster = eks.Cluster(
-            self, id='wmp-eks-cluster',
+            self, id='map-eks-cluster',
             cluster_name=config.getValue('eks.cluster_name'),
             version=eks.KubernetesVersion.V1_19,
             vpc=vpc_stack.vpc,
@@ -49,7 +48,7 @@ class EksStack(core.Stack):
         )
 
         self.cluster.add_nodegroup_capacity(
-            'wmp-eks-nodegroup',
+            'map-eks-nodegroup',
             instance_types=[ec2.InstanceType(config.getValue('eks.nodegroup.instance_type'))],
             disk_size=config.getValue('eks.nodegroup.disk_size'),
             min_size=config.getValue('eks.nodegroup.min_size'),
