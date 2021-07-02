@@ -21,7 +21,7 @@ class PipelineStack(core.Stack):
 
         pipeline = pipelines.CdkPipeline(
             self, "Pipeline",
-            pipeline_name="Wmp_Infrastructure_Codepipeline",
+            pipeline_name="Map_Infrastructure_Codepipeline",
             cloud_assembly_artifact=cloud_assembly_artifact,
             source_action=codepipeline_actions.BitBucketSourceAction(
                 action_name='SourceCode_Download',
