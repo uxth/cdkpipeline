@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: wmp
-        image: 711208530951.dkr.ecr.us-west-2.amazonaws.com/map_wmp:latest
+        image: 182732313984.dkr.ecr.us-west-2.amazonaws.com/map_wmp
         # env:
         # - name: PORT
         #   value: 8080
