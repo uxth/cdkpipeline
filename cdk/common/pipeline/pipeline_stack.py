@@ -68,7 +68,7 @@ class PipelineStack(core.Stack):
             self,
             'SnsTopic',
             topic_name='SnsTopic',
-            display_name='WMP_Automation_Notifications'
+            display_name='Map_Automation_Notifications'
         )
         emailSubscription = sns.Subscription(
             self,
@@ -79,8 +79,8 @@ class PipelineStack(core.Stack):
         )
         notifications.PipelineNotificationRule(
             self,
-            'PipelineNotificationRule',
-            name='PipelineNotificationRule',
+            'MapPipelineNotificationRule',
+            name='MapPipelineNotificationRule',
             pipeline=pipeline.code_pipeline,
             events=[
                 # notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,
