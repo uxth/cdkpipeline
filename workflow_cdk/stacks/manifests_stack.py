@@ -1,13 +1,15 @@
-from aws_cdk import aws_eks as eks
-from aws_cdk import core
-from cdk.common.stacks.eks import EksStack
+from aws_cdk import (
+    core,
+    aws_eks as eks
+)
 
+from utils.configBuilder import WmpConfig
+from workflow_cdk.stacks.eks_stack import EksStack
 from utils import yamlParser
-from utils.configBuilder import Config
 
 
 class ManifestsStack(core.Stack):
-    def __init__(self, scope: core.Construct, id: str, eks_stack: EksStack, config: Config,
+    def __init__(self, scope: core.Construct, id: str, eks_stack: EksStack, config: WmpConfig,
                  **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         eks.KubernetesManifest(
@@ -15,7 +17,7 @@ class ManifestsStack(core.Stack):
             id='wmp-manifest',
             cluster=eks_stack.cluster,
             manifest=yamlParser.readManifest(
-                paths=config.getValue('wmp.manifests.files')
+                paths=config.getValue('manifests.files')
             ),
             overwrite=True
         )
