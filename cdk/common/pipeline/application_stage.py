@@ -3,6 +3,7 @@ from aws_cdk import core
 from cdk.apps.wmp.stacks.argo_events import ArgoEventsStack
 from cdk.apps.wmp.stacks.manifests import ManifestsStack
 from cdk.apps.wmp.stacks.argo_workflows import ArgoWorkflowsStack
+from cdk.common.stacks.cassandra import CassandraStack
 from cdk.common.stacks.eks import EksStack
 from cdk.apps.wmp.stacks.kafka import KafkaStack
 from cdk.common.stacks.rds import RdsStack
@@ -21,8 +22,13 @@ class ApplicationStage(core.Stage):
         vpc_stack = VpcStack(
             self, "map-vpc",
             config=config,
-            env=env)
-
+            env=env,
+        )
+        cassandra_stack = CassandraStack(
+            self, "map-cassandra",
+            config=config,
+            env=env
+        )
         eks_stack = EksStack(
             self, 'map-eks',
             vpc_stack=vpc_stack,
