@@ -8,7 +8,7 @@ class CassandraStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, config: Config, **kwargs) -> \
             None:
         super().__init__(scope, construct_id, **kwargs)
-        cassandra.CfnKeyspace(
+        keySpace = cassandra.CfnKeyspace(
             self,
             'cassandra_keyspace',
             keyspace_name=config.getValue('cassandra.keyspace_name')
@@ -16,7 +16,7 @@ class CassandraStack(core.Stack):
         cassandra.CfnTable(
             self,
             'cassandra_table',
-            keyspace_name=config.getValue('cassandra.keyspace_name'),
+            keyspace_name=keySpace.keyspace_name,
             table_name=config.getValue('cassandra.table_name'),
-
+            partition_key_columns=[cassandra.CfnTable.ColumnProperty(column_name='test', column_type='TEXT')]
         )
