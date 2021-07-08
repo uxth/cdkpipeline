@@ -13,3 +13,10 @@ class CassandraStack(core.Stack):
             'cassandra_keyspace',
             keyspace_name=config.getValue('cassandra.keyspace_name')
         )
+        cassandra.CfnTable(
+            self,
+            'cassandra_table',
+            keyspace_name=config.getValue('cassandra.keyspace_name'),
+            table_name=config.getValue('cassandra.table_name'),
+
+        )
