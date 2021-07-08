@@ -13,6 +13,8 @@ class CassandraStack(core.Stack):
             'cassandra_keyspace',
             keyspace_name=config.getValue('cassandra.keyspace_name')
         )
+        # Data types
+        # https://docs.aws.amazon.com/keyspaces/latest/devguide/cql.elements.html?cmpid=docs_keyspaces_hp-table#cql.data-types
         cassandra.CfnTable(
             self,
             'cassandra_table',
