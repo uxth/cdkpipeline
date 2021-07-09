@@ -15,10 +15,11 @@ class CassandraStack(core.Stack):
         )
         # Data types
         # https://docs.aws.amazon.com/keyspaces/latest/devguide/cql.elements.html?cmpid=docs_keyspaces_hp-table#cql.data-types
-        cassandra.CfnTable(
+        cfnTable = cassandra.CfnTable(
             self,
             'cassandra_table',
             keyspace_name=keySpace.keyspace_name,
             table_name=config.getValue('cassandra.table_name'),
             partition_key_columns=[cassandra.CfnTable.ColumnProperty(column_name='test', column_type='TEXT')]
         )
+        cfnTable.add_depends_on(keySpace)
