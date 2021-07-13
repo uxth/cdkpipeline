@@ -14,7 +14,7 @@ class ArgoWorkflowsStack(core.Stack):
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
 
-        manifest['stringData']['password'] = core.SecretValue.secrets_manager(rds_stack.credentials.secret_name,
+        manifest['stringData']['password'] = core.SecretValue.secrets_manager(config.getValue('rds.admin_secret_name'),
             json_field='password').to_string()
         print(manifest)
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
@@ -29,9 +29,10 @@ class ArgoWorkflowsStack(core.Stack):
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
         yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint
-        eks.HelmChart(
+        helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
             namespace='argo', release=config.getValue('wmp.argo-workflow.release'),
             values=yaml,
-            wait=True)
+            wait=True
+        )

@@ -2,6 +2,7 @@ from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_eks as eks
 from aws_cdk import aws_iam as iam
 from aws_cdk import core
+from aws_cdk import aws_secretsmanager as secretmanager
 from cdk.common.stacks.vpc import VpcStack
 
 from utils.configBuilder import Config
@@ -12,10 +13,11 @@ class EksStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, vpc_stack: VpcStack, config: Config, **kwargs) -> \
             None:
         super().__init__(scope, construct_id, **kwargs)
+
         eks_user = iam.User(
             self, id="map-eks-user",
             user_name=config.getValue('eks.admin_username'),
-            password=core.SecretValue.plain_text(stringGenerator(24))  # this need to be changed
+            password=core.SecretValue.plain_text(stringGenerator(24))
         )
         policy = iam.Policy(
             self, id='map-eks-policy',
