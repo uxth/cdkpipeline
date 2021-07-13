@@ -11,11 +11,10 @@ class ArgoWorkflowsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, rds_stack: RdsStack, config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
-        yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
-        manifest['stringData']['password'] = core.SecretValue.secrets_manager('password',
+
+        manifest['stringData']['password'] = core.SecretValue.secrets_manager(rds_stack.credentials.secret_name,
             json_field='password').to_string()
         print(manifest)
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
@@ -27,6 +26,9 @@ class ArgoWorkflowsStack(core.Stack):
             manifest=manifests,
             overwrite=True
         )
+
+        yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
+        yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint
         eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
