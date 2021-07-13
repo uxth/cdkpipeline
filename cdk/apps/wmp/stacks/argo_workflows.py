@@ -11,10 +11,11 @@ class ArgoWorkflowsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, rds_stack: RdsStack, config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
 
-        manifest['stringData']['password'] = core.SecretValue.secrets_manager(config.getValue('rds.admin_secret_name'),
+        manifest['stringData']['password'] = core.SecretValue.secrets_manager(
+            # secret_id=config.getValue('rds.admin_secret_name'),
+            secret_id=rds_stack.credentials.secret.secret_arn,
             json_field='password').to_string()
         print(manifest)
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))

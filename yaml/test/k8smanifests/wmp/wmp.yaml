@@ -31,6 +31,13 @@ spec:
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "echo Hello from the postStart handler"]
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "echo Hello from the preStop handler"]
 ---
 apiVersion: v1
 kind: Service
