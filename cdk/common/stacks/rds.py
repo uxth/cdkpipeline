@@ -1,6 +1,7 @@
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_rds as rds
 from aws_cdk import core
+from aws_cdk import aws_secretsmanager as secretmanager
 from cdk.common.stacks.eks import EksStack
 from cdk.common.stacks.vpc import VpcStack
 
@@ -32,18 +33,18 @@ class RdsStack(core.Stack):
             ec2.Peer.ipv4('10.161.48.0/22'),
             ec2.Port.tcp(config.getValue('rds.port'))
         )
-        credentials = rds.Credentials.from_generated_secret(
+        self.credentials = rds.Credentials.from_generated_secret(
             username=config.getValue('rds.admin_username'),
             secret_name=config.getValue('rds.admin_secret_name')
         )
-        rds_cluster = rds.DatabaseCluster(
+        self.rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
             default_database_name=config.getValue('rds.database_name'),
             engine=rds.DatabaseClusterEngine.aurora_postgres(
                 version=rds.AuroraPostgresEngineVersion.VER_12_4
             ),
-            credentials=credentials,
+            credentials=self.credentials,
             instances=config.getValue('rds.instances'),
             instance_props=rds.InstanceProps(
                 vpc=vpc_stack.vpc,
@@ -68,7 +69,7 @@ class RdsStack(core.Stack):
                 )
             )
         )
-        rds_cluster.connections.allow_from(
+        self.rds_cluster.connections.allow_from(
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )

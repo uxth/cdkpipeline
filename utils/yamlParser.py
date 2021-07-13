@@ -1,6 +1,10 @@
 import yaml
 
 
+def stringToYaml(content: str):
+    return yaml.load(content)
+
+
 def readYaml(path: str):
     with open(path) as file:
         res = yaml.load(file, yaml.FullLoader)

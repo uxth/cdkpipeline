@@ -57,9 +57,11 @@ class ApplicationStage(core.Stage):
         argo_workflows_stack = ArgoWorkflowsStack(
             self, 'argo-workflows',
             eks_stack=eks_stack,
+            rds_stack=rds_stack,
             config=config,
             env=env)
         argo_workflows_stack.add_dependency(eks_stack)
+        argo_workflows_stack.add_dependency(rds_stack)
 
         argo_events_stack = ArgoEventsStack(
             self, 'argo-events',

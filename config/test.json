@@ -55,7 +55,8 @@
       "valuesPath": "yaml/test/helm/argo-workflows/values.yaml",
       "manifests": [
         "yaml/test/k8smanifests/argo-workflows/namespaces.yaml"
-      ]
+      ],
+      "secrets": "yaml/test/k8smanifests/argo-workflows/secrets.yaml"
     },
     "argo-events": {
       "release": "argo-events",
