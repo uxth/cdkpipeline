@@ -72,4 +72,3 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
-        credentials.password.to_string()
