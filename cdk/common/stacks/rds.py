@@ -32,7 +32,10 @@ class RdsStack(core.Stack):
             ec2.Peer.ipv4('10.161.48.0/22'),
             ec2.Port.tcp(config.getValue('rds.port'))
         )
-
+        credentials = rds.Credentials.from_generated_secret(
+            username=config.getValue('rds.admin_username'),
+            secret_name=config.getValue('rds.admin_secret_name')
+        )
         rds_cluster = rds.DatabaseCluster(
             self,
             config.getValue('rds.database_name'),
@@ -40,10 +43,7 @@ class RdsStack(core.Stack):
             engine=rds.DatabaseClusterEngine.aurora_postgres(
                 version=rds.AuroraPostgresEngineVersion.VER_12_4
             ),
-            credentials=rds.Credentials.from_generated_secret(
-                username=config.getValue('rds.admin_username'),
-                secret_name=config.getValue('rds.admin_secret_name')
-            ),
+            credentials=credentials,
             instances=config.getValue('rds.instances'),
             instance_props=rds.InstanceProps(
                 vpc=vpc_stack.vpc,
@@ -72,3 +72,4 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
+        credentials.password.to_string()
