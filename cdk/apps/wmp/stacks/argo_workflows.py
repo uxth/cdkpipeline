@@ -15,7 +15,7 @@ class ArgoWorkflowsStack(core.Stack):
 
         manifest['stringData']['password'] = core.SecretValue.secrets_manager(
             # secret_id=config.getValue('rds.admin_secret_name'),
-            secret_id=rds_stack.credentials.secret.secret_arn,
+            secret_id='arn:aws:secretsmanager:us-west-2:711208530951:secret:map_rds_admin-1prLs8',
             json_field='password').to_string()
         print(manifest)
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
