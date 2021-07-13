@@ -45,7 +45,6 @@ class PipelineStack(core.Stack):
             ),
             self_mutating=True
         )
-
         teststage = pipeline.add_application_stage(
             ApplicationStage(
                 self,

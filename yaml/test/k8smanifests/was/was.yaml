@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: release-manager
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: core-api-services
+          image: nginx
+          ports:
+            - containerPort: 80

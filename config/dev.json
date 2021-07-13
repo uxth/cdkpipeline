@@ -1,4 +1,5 @@
 {
+  "_comment1": "infra section starts from here",
   "common": {
     "AWSAccountID": "182732313984",
     "AWSProfileRegion": "us-west-2"
@@ -28,12 +29,25 @@
     "instances": 1,
     "removalPolicy": "DESTROY"
   },
-  "release_manager": {
-    "s3_bucket_name": "release_manager"
-  },
   "cassandra": {
     "keyspace_name": "map_cassandra_keyspace",
     "table_name": "GPSIMU"
+  },
+  "s3": {
+    "buckets": [
+      {
+        "name": "greatmaps-release",
+        "versioned": false
+      }
+    ]
+  },
+  "_comment2": "application section starts from here",
+  "was": {
+    "manifests": {
+      "files": [
+        "yaml/dev/k8smanifests/was/was.yaml"
+      ]
+    }
   },
   "wmp": {
     "argo-workflow": {

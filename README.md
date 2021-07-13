@@ -55,4 +55,11 @@ command.
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
 
+## Here is the list of applications:
+
+| Applications  | Abbreviations  | Owner |
+|---|---|---|
+| Workflow manager platform  | wmp |  Ning Xu  |
+| Web api services  | was | Yang Peng & Ziqi Liu |
+
 Enjoy!

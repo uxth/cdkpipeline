@@ -1,13 +1,15 @@
 
 from aws_cdk import core
+from cdk.apps.was.stacks.manifests import ManifestsStack as WasManifestsStack
 from cdk.apps.wmp.stacks.argo_events import ArgoEventsStack
-from cdk.apps.wmp.stacks.manifests import ManifestsStack
+from cdk.apps.wmp.stacks.manifests import ManifestsStack as WmpManifestsStack
 from cdk.apps.wmp.stacks.argo_workflows import ArgoWorkflowsStack
 from cdk.common.stacks.cassandra import CassandraStack
 from cdk.common.stacks.eks import EksStack
 from cdk.apps.wmp.stacks.kafka import KafkaStack
 from cdk.common.stacks.rds import RdsStack
 from cdk.common.stacks.vpc import VpcStack
+from cdk.common.stacks.s3 import S3Stack
 
 from utils.configBuilder import Config
 
@@ -67,9 +69,21 @@ class ApplicationStage(core.Stage):
         argo_events_stack.add_dependency(argo_workflows_stack)
         argo_events_stack.add_dependency(kafka_stack)
 
-        manifests_stack = ManifestsStack(
+        s3_stack = S3Stack(
+            self, 's3',
+            config=config,
+            env=env)
+
+        was_manifests_stack = WasManifestsStack(
+            self, 'was-manifests',
+            eks_stack=eks_stack,
+            config=config,
+            env=env)
+        was_manifests_stack.add_dependency(eks_stack)
+
+        wmp_manifests_stack = WmpManifestsStack(
             self, 'wmp-manifests',
             eks_stack=eks_stack,
             config=config,
             env=env)
-        manifests_stack.add_dependency(argo_events_stack)
+        wmp_manifests_stack.add_dependency(argo_events_stack)
