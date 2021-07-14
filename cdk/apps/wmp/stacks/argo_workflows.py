@@ -38,6 +38,7 @@ class ArgoWorkflowsStack(core.Stack):
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
         yaml['controller']['persistence']['postgresql']['host'] = host
+
         helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
