@@ -2,7 +2,7 @@ from aws_cdk import aws_eks as eks
 from aws_cdk import core
 from cdk.common.stacks.eks import EksStack
 from cdk.common.stacks.rds import RdsStack
-
+from aws_cdk import aws_secretsmanager as secretmanager
 from utils import yamlParser
 from utils.configBuilder import Config
 
@@ -13,10 +13,13 @@ class ArgoWorkflowsStack(core.Stack):
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
         manifest['stringData']['password'] = core.SecretValue.secrets_manager(
-            secret_id=config.getValue('rds.admin_secret_name'),
+            secret_id=secretmanager.Secret.from_secret_name_v2(
+                self, 'rds_secret',
+                secret_name=config.getValue('rds.admin_secret_name')
+            ).secret_arn,
             # secret_id='arn:aws:secretsmanager:us-west-2:711208530951:secret:map_rds_admin-1prLs8',
             json_field='password').to_string()
-        # print(manifest)
+
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
         manifests.append(manifest)
         # install argo workflows
