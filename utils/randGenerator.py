@@ -11,5 +11,5 @@ def stringGenerator(length: int):
             res += random.choice(string.digits)
         if len(res) < length:
             res += random.choice(string.punctuation)
-    print(res)
+    # print(res)
     return res
