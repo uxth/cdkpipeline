@@ -16,7 +16,7 @@ class ArgoWorkflowsStack(core.Stack):
         super().__init__(scope, construct_id, **kwargs)
         secret = secretmanager.Secret.from_secret_partial_arn(
             self, 'partial_arn',
-            rds_stack.secret_arn
+            secret_partial_arn=config.getValue('rds.admin_secret_name')
         )
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
