@@ -1,6 +1,7 @@
 from aws_cdk import aws_codepipeline as codepipeline
 from aws_cdk import aws_codepipeline_actions as codepipeline_actions
 from aws_cdk import aws_sns as sns
+from aws_cdk import aws_iam as iam
 from aws_cdk import core
 from aws_cdk import pipelines as pipelines
 from cdk.common.pipeline.application_stage import ApplicationStage
@@ -37,6 +38,12 @@ class PipelineStack(core.Stack):
                 synth_command='cdk synth',
                 cloud_assembly_artifact=cloud_assembly_artifact,
                 source_artifact=source_artifact,
+                role_policy_statements=[iam.PolicyStatement(
+                    sid='SecretsManagerFullAccess',
+                    effect=iam.Effect.ALLOW,
+                    actions=['secretsmanager:*'],
+                    resources=['*']
+                )],
                 install_commands=[
                     "mkdir -p map_cdk",
                     "npm install -g aws-cdk",
