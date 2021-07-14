@@ -73,9 +73,3 @@ class RdsStack(core.Stack):
             other=eks_cluster.cluster,
             port_range=ec2.Port.all_tcp()
         )
-        self.secret_arn = self.format_arn(
-            service="secretmanager",
-            resource="secret",
-            resource_name=config.getValue('rds.admin_secret_name'),
-            sep=':'
-        )
