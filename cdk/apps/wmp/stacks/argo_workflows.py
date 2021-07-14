@@ -8,15 +8,15 @@ from utils.configBuilder import Config
 
 
 class ArgoWorkflowsStack(core.Stack):
-    def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, rds_stack: RdsStack, config: Config, **kwargs) -> None:
+    def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-
-        manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
-        manifest['stringData']['password'] = core.SecretValue.secrets_manager(
-            secret_id=secretmanager.Secret.from_secret_name_v2(
+        secret_arn = secretmanager.Secret.from_secret_name_v2(
                 self, 'rds_secret',
                 secret_name=config.getValue('rds.admin_secret_name')
-            ).secret_arn,
+            ).secret_arn
+        manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
+        manifest['stringData']['password'] = core.SecretValue.secrets_manager(
+            secret_id=secret_arn,
             # secret_id='arn:aws:secretsmanager:us-west-2:711208530951:secret:map_rds_admin-1prLs8',
             json_field='password').to_string()
 
@@ -31,7 +31,9 @@ class ArgoWorkflowsStack(core.Stack):
         )
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
-        yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint.hostname
+        yaml['controller']['persistence']['postgresql']['host'] = core.SecretValue.secrets_manager(
+            secret_id=secret_arn,
+            json_field='host').to_string()
         helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
