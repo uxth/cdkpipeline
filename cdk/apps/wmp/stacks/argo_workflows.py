@@ -30,7 +30,7 @@ class ArgoWorkflowsStack(core.Stack):
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
         yaml['controller']['persistence']['postgresql']['host'] = core.SecretValue.secrets_manager(
-            secret_id=config.getValue('rds.admin_secret_name'),
+            secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
             json_field='host').to_string()
         helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
