@@ -20,8 +20,10 @@ class ArgoWorkflowsStack(core.Stack):
                 resource_name=config.getValue('rds.admin_secret_name'),
                 account=config.getValue('common.AWSAccountID'),
                 region=config.getValue('common.AWSProfileRegion'),
+                partition='aws',
                 sep=':'
             ))
+
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
 
         manifest['stringData']['password'] = secret.secret_value_from_json('password')
