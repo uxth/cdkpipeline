@@ -26,7 +26,7 @@ class ArgoWorkflowsStack(core.Stack):
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
 
-        manifest['stringData']['password'] = secret.secret_value_from_json('password').to_strintg()
+        manifest['stringData']['password'] = secret.secret_value_from_json('password').to_string()
         # manifest['stringData']['password'] = core.SecretValue.secrets_manager(
         #     secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
         #     json_field='password').to_string()
@@ -39,6 +39,7 @@ class ArgoWorkflowsStack(core.Stack):
             manifest=manifests,
             overwrite=True
         )
+        print(manifest)
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
         yaml['controller']['persistence']['postgresql']['host'] = secret.secret_value_from_json('host').to_string()
