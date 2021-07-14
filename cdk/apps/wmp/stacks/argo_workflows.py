@@ -10,14 +10,13 @@ from utils.configBuilder import Config
 class ArgoWorkflowsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        secret_arn = secretmanager.Secret.from_secret_name_v2(
+        secret = secretmanager.Secret.from_secret_name_v2(
             self, 'rds_secret',
             secret_name=config.getValue('rds.admin_secret_name')
-        ).secret_arn
+        )
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
         manifest['stringData']['password'] = core.SecretValue.secrets_manager(
-            secret_id=config.getValue('rds.admin_secret_name'),
-            # secret_id='arn:aws:secretsmanager:us-west-2:711208530951:secret:map_rds_admin-1prLs8',
+            secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
             json_field='password').to_string()
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
         manifests.append(manifest)

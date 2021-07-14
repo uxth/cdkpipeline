@@ -56,7 +56,8 @@
       "manifests": [
         "yaml/dev/k8smanifests/argo-workflows/namespaces.yaml"
       ],
-      "secrets": "yaml/dev/k8smanifests/argo-workflows/secrets.yaml"
+      "secrets": "yaml/dev/k8smanifests/argo-workflows/secrets.yaml",
+      "secret_arn": "arn:aws:secretsmanager:us-west-2:182732313984:secret:map_rds_admin-aB3gkc"
     },
     "argo-events": {
       "release": "argo-events",
