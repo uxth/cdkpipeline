@@ -16,7 +16,7 @@ class ArgoWorkflowsStack(core.Stack):
             secret_id=config.getValue('rds.admin_secret_name'),
             # secret_id='arn:aws:secretsmanager:us-west-2:711208530951:secret:map_rds_admin-1prLs8',
             json_field='password').to_string()
-        print(manifest)
+        # print(manifest)
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
         manifests.append(manifest)
         # install argo workflows
@@ -28,7 +28,7 @@ class ArgoWorkflowsStack(core.Stack):
         )
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
-        yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint
+        yaml['controller']['persistence']['postgresql']['host'] = rds_stack.rds_cluster.cluster_endpoint.hostname
         helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
