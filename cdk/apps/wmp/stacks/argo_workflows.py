@@ -15,9 +15,11 @@ class ArgoWorkflowsStack(core.Stack):
             secret_name=config.getValue('rds.admin_secret_name')
         )
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
-        manifest['stringData']['password'] = core.SecretValue.secrets_manager(
-            secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
-            json_field='password').to_string()
+        json = secret.secret_value.to_json()
+        manifest['stringData']['password'] = json['password']
+        # manifest['stringData']['password'] = core.SecretValue.secrets_manager(
+        #     secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
+        #     json_field='password').to_string()
         manifests = yamlParser.readManifest(paths=config.getValue('wmp.argo-workflow.manifests'))
         manifests.append(manifest)
         # install argo workflows
@@ -29,9 +31,10 @@ class ArgoWorkflowsStack(core.Stack):
         )
 
         yaml = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.valuesPath'))
-        yaml['controller']['persistence']['postgresql']['host'] = core.SecretValue.secrets_manager(
-            secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
-            json_field='host').to_string()
+        yaml['controller']['persistence']['postgresql']['host'] = json['host']
+        # yaml['controller']['persistence']['postgresql']['host'] = core.SecretValue.secrets_manager(
+        #     secret_id=config.getValue('wmp.argo-workflow.secret_arn'),
+        #     json_field='host').to_string()
         helm = eks.HelmChart(
             self, id='wmp-argo-workflows', cluster=eks_stack.cluster, chart='argo-workflows',
             repository='https://argoproj.github.io/argo-helm',
