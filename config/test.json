@@ -45,7 +45,7 @@
   "was": {
     "manifests": {
       "files": [
-        "yaml/dev/k8smanifests/was/was.yaml"
+        "yaml/test/k8smanifests/was/was.yaml"
       ]
     }
   },
