@@ -11,12 +11,11 @@ from utils.configBuilder import Config
 
 class ArgoWorkflowsStack(core.Stack):
     def __init__(self, scope: core.Construct, construct_id: str, eks_stack: EksStack, rds_stack: RdsStack,
-                 config: Config,
-    **kwargs) -> None:
+                 config: Config, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         secret = secretmanager.Secret.from_secret_partial_arn(
             self, 'partial_arn',
-            secret_partial_arn=config.getValue('rds.admin_secret_name')
+            secret_partial_arn=config.getValue('wmp.argo-workflow.secret_arn')
         )
 
         manifest = yamlParser.readYaml(path=config.getValue('wmp.argo-workflow.secrets'))
