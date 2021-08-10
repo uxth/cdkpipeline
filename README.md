@@ -61,5 +61,6 @@ command.
 |---|---|---|
 | Workflow manager platform  | wmp |  Ning Xu  |
 | Web api services  | was | Yang Peng & Ziqi Liu |
+| Map features services  | mfs | Ziqi Liu |
 
 Enjoy!

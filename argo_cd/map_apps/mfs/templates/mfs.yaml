@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mfs
+  labels:
+    app: web
+spec:
+  replicas: {{ .Values.spec.replicas }}
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: core-api-services
+          image: nginx
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+                name: map-app-secret

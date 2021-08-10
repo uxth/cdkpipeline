@@ -1,14 +1,12 @@
 
 from aws_cdk import core
-from cdk.apps.was.stacks.manifests import ManifestsStack as WasManifestsStack
-from cdk.apps.wmp.stacks.argo_events import ArgoEventsStack
-from cdk.apps.wmp.stacks.manifests import ManifestsStack as WmpManifestsStack
-from cdk.apps.wmp.stacks.argo_workflows import ArgoWorkflowsStack
+from cdk.common.stacks.argo_workflows import ArgoWorkflowsStack
+from cdk.common.stacks.argo_cd import ArgoCDStack
+from cdk.common.stacks.baseline_app import BaselineAppStack
 from cdk.common.stacks.cassandra import CassandraStack
 from cdk.common.stacks.eks import EksStack
-from cdk.apps.wmp.stacks.kafka import KafkaStack
+from cdk.common.stacks.iam import IamStack
 from cdk.common.stacks.rds import RdsStack
-from cdk.common.stacks.vpc import VpcStack
 from cdk.common.stacks.s3 import S3Stack
 
 from utils.configBuilder import Config
@@ -21,11 +19,6 @@ class ApplicationStage(core.Stage):
             account=config.getValue('common.AWSAccountID'),
             region=config.getValue('common.AWSProfileRegion')
         )
-        vpc_stack = VpcStack(
-            self, "map-vpc",
-            config=config,
-            env=env,
-        )
         cassandra_stack = CassandraStack(
             self, "map-cassandra",
             config=config,
@@ -33,59 +26,50 @@ class ApplicationStage(core.Stage):
         )
         eks_stack = EksStack(
             self, 'map-eks',
-            vpc_stack=vpc_stack,
             config=config,
             env=env)
-        eks_stack.add_dependency(vpc_stack)
 
-        rds_stack = RdsStack(
-            self, 'map-rds',
-            vpc_stack=vpc_stack,
-            eks_cluster=eks_stack,
+        argo_cd_stack = ArgoCDStack(
+            self, 'argo-cd',
+            eks_stack=eks_stack,
             config=config,
             env=env
         )
-        rds_stack.add_dependency(eks_stack)
+        argo_cd_stack.add_dependency(eks_stack)
 
-        kafka_stack = KafkaStack(
-            self, 'kafka',
+        baseline_app_stack = BaselineAppStack(
+            self, 'baseline-app',
             eks_stack=eks_stack,
             config=config,
-            env=env)
-        kafka_stack.add_dependency(eks_stack)
+            env=env
+        )
+        baseline_app_stack.add_dependency(argo_cd_stack)
+
+        rds_stack = RdsStack(
+            self, 'map-rds',
+            config=config,
+            env=env
+        )
 
         argo_workflows_stack = ArgoWorkflowsStack(
             self, 'argo-workflows',
             eks_stack=eks_stack,
-            rds_stack=rds_stack,
             config=config,
             env=env)
         argo_workflows_stack.add_dependency(eks_stack)
         argo_workflows_stack.add_dependency(rds_stack)
 
-        argo_events_stack = ArgoEventsStack(
-            self, 'argo-events',
-            eks_stack=eks_stack,
-            config=config,
-            env=env)
-        argo_events_stack.add_dependency(argo_workflows_stack)
-        argo_events_stack.add_dependency(kafka_stack)
-
         s3_stack = S3Stack(
             self, 's3',
             config=config,
-            env=env)
+            env=env
+        )
 
-        was_manifests_stack = WasManifestsStack(
-            self, 'was-manifests',
-            eks_stack=eks_stack,
+        iam_stack = IamStack(
+            self, 'iam-users',
             config=config,
-            env=env)
-        was_manifests_stack.add_dependency(eks_stack)
+            eks_stack=eks_stack,
+            env=env
+        )
+        iam_stack.add_dependency(eks_stack)
 
-        wmp_manifests_stack = WmpManifestsStack(
-            self, 'wmp-manifests',
-            eks_stack=eks_stack,
-            config=config,
-            env=env)
-        wmp_manifests_stack.add_dependency(argo_events_stack)

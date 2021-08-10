@@ -1,0 +1,27 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: map-baseline-app
+  namespace: argo
+spec:
+  destination:
+    name: ''
+    namespace: argocd-apps
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: argo_cd/baseline_app/dev
+    repoURL: 'git@ghe.tusimple.io:TuSimple/map-aws-infra.git'
+    targetRevision: ningxu/argo_cd
+    directory:
+      recurse: true
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PrunePropagationPolicy=background

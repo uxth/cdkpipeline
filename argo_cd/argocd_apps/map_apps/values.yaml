@@ -1,0 +1,24 @@
+mfs:
+  enabled: true
+  spec:
+    source:
+      targetRevision: master
+      helm:
+        valueFiles:
+          - values.yaml
+was:
+  enabled: true
+  spec:
+    source:
+      targetRevision: master
+      helm:
+        valueFiles:
+          - values.yaml
+wmp:
+  enabled: true
+  spec:
+    source:
+      targetRevision: master
+      helm:
+        valueFiles:
+          - values.yaml

@@ -10,13 +10,26 @@
   "eks": {
     "admin_username": "map-eks-cluster-admin",
     "cluster_name": "map-eks-cluster",
+    "cluster_role_name": "map-eks-cluster-role",
     "nodegroup": {
       "instance_type": "t3.large",
       "disk_size": 50,
       "min_size": 2,
       "max_size": 4,
       "desired_size": 2
-    }
+    },
+    "manifests": [
+      "yaml/test/k8smanifests/namespaces/namespaces.yaml"
+    ]
+  },
+  "app": {
+    "namespaces": [
+      "default",
+      "wmp",
+      "was",
+      "mfs"
+    ],
+    "secret_manifest": "yaml/test/k8smanifests/iam-secrets/secrets.yaml"
   },
   "rds": {
     "database_name": "MapRDS",
@@ -27,7 +40,13 @@
     "max_allocated_storage": 50,
     "instanceType": "t3.medium",
     "instances": 1,
-    "removalPolicy": "DESTROY"
+    "removalPolicy": "DESTROY",
+    "ingress_rules": [
+      "10.160.0.0/16",
+      "10.162.0.0/16",
+      "10.161.0.0/16",
+      "172.30.0.0/16"
+    ]
   },
   "cassandra": {
     "keyspace_name": "map_cassandra_keyspace",
@@ -38,44 +57,25 @@
       {
         "name": "greatmaps-release",
         "versioned": false
+      },
+      {
+        "name": "greatmaps-features",
+        "versioned": false
       }
     ]
   },
-  "_comment2": "application section starts from here",
-  "was": {
-    "manifests": {
-      "files": [
-        "yaml/test/k8smanifests/was/was.yaml"
-      ]
-    }
+  "argocd": {
+    "valuesPath": "yaml/test/helm/argo-cd/values.yaml",
+    "repo-secrets": "yaml/test/k8smanifests/argo-cd/ghe-secret.yaml",
+    "manifests": [
+      "yaml/test/k8smanifests/argo-cd/argocd-cm.yaml",
+      "argo_cd/baseline_app/test/map_cd_app.yaml"
+    ]
   },
-  "wmp": {
-    "argo-workflow": {
-      "release": "argo-workflow",
-      "valuesPath": "yaml/test/helm/argo-workflows/values.yaml",
-      "manifests": [
-        "yaml/test/k8smanifests/argo-workflows/namespaces.yaml"
-      ],
-      "secrets": "yaml/test/k8smanifests/argo-workflows/secrets.yaml"
-    },
-    "argo-events": {
-      "release": "argo-events",
-      "valuesPath": "yaml/test/helm/argo-events/values.yaml"
-    },
-    "kafka": {
-      "release": "kafka",
-      "valuesPath": "yaml/test/helm/kafka/values.yaml"
-    },
-    "manifests": {
-      "files": [
-        "yaml/test/k8smanifests/argo-events/events_role.yaml",
-        "yaml/test/k8smanifests/argo-events/workflows_role.yaml",
-        "yaml/test/k8smanifests/argo-events/eventbus.yaml",
-        "yaml/test/k8smanifests/argo-events/sensor.yaml",
-        "yaml/test/k8smanifests/argo-events/eventsource_webhook.yaml",
-        "yaml/test/k8smanifests/argo-events/eventsource_kafka.yaml",
-        "yaml/test/k8smanifests/wmp/wmp.yaml"
-      ]
-    }
+  "argo-workflow": {
+    "release": "argo-workflow",
+    "valuesPath": "yaml/test/helm/argo-workflows/values.yaml",
+    "secrets": "yaml/test/k8smanifests/argo-workflows/secrets.yaml",
+    "postgres_service": "yaml/test/k8smanifests/argo-workflows/postgres.yaml"
   }
 }

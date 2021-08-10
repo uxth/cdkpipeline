@@ -1,0 +1,8 @@
+spec:
+  replicas: 1
+  template:
+    spec:
+      image: 711208530951.dkr.ecr.us-west-2.amazonaws.com/map_wmp:latest
+      port: 80
+      prometheusport: 9090
+      imagePullPolicy: Always

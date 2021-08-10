@@ -3,13 +3,17 @@ import random
 
 
 def stringGenerator(length: int):
-    res = ''
+    res = random.choice(string.ascii_lowercase)
+    res += random.choice(string.ascii_uppercase)
+    res += random.choice(string.digits)
+    res += random.choice(string.punctuation)
     while len(res) < length:
-        if len(res) < length:
+        choice = random.randint(0, 3)
+        if choice == 0:
             res += random.choice(string.ascii_letters)
-        if len(res) < length:
+        elif choice == 1:
             res += random.choice(string.digits)
-        if len(res) < length:
+        else:
             res += random.choice(string.punctuation)
     # print(res)
     return res

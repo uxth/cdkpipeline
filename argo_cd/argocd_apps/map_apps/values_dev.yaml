@@ -1,0 +1,24 @@
+mfs:
+  enabled: true
+  spec:
+    source:
+      targetRevision: ningxu/argo_cd
+      helm:
+        valueFiles:
+          - values_dev.yaml
+was:
+  enabled: true
+  spec:
+    source:
+      targetRevision: ningxu/argo_cd
+      helm:
+        valueFiles:
+          - values_dev.yaml
+wmp:
+  enabled: true
+  spec:
+    source:
+      targetRevision: ningxu/argo_cd
+      helm:
+        valueFiles:
+          - values_dev.yaml

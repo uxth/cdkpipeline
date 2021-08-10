@@ -1,0 +1,30 @@
+{{- if .Values.wmp.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wmp-app
+  namespace: argo
+spec:
+  destination:
+    namespace: wmp
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    helm:
+      valueFiles:
+        {{- range .Values.wmp.spec.source.helm.valueFiles }}
+        - {{ . }}
+        {{- end }}
+
+    path: argo_cd/map_apps/wmp/
+    repoURL: 'git@ghe.tusimple.io:TuSimple/map-aws-infra.git'
+    targetRevision: {{ .Values.wmp.spec.source.targetRevision }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background
+{{- end }}

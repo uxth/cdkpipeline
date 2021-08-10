@@ -19,19 +19,23 @@ class PipelineStack(core.Stack):
 
         source_artifact = codepipeline.Artifact()
         cloud_assembly_artifact = codepipeline.Artifact()
-
         pipeline = pipelines.CdkPipeline(
-            self, "MapPipeline",
-            pipeline_name="Map_Infrastructure_Codepipeline",
+            self, "MapCdkPipeline",
             cloud_assembly_artifact=cloud_assembly_artifact,
-            source_action=codepipeline_actions.BitBucketSourceAction(
-                action_name='SourceCode_Download',
-                connection_arn='arn:aws:codestar-connections:us-west-2:711208530951:connection/'
-                               '8b570e8a-f02c-426d-897a-90838859eff8',
+            pipeline_name='Map_Infrastructure_CodePipeline',
+            source_action=codepipeline_actions.CodeStarConnectionsSourceAction(
+                action_name='SourceCode',
+                connection_arn='arn:aws:codestar-connections:us-west-2:192878884426:connection/81711257-3407'
+                               '-4781-bc43-5e5f7db2fadc',
                 output=source_artifact,
-                owner='uxth',
-                repo='cdkpipeline',
-                branch='main'
+                owner='TuSimple',
+                repo='map-aws-infra',
+                branch='ningxu/argo_cd',
+                role=iam.Role.from_role_arn(
+                    self, 'cross_account_role',
+                    role_arn='arn:aws:iam::192878884426:role/Cross_Account_Role'
+                ),
+                trigger_on_push=True
             ),
             synth_action=pipelines.SimpleSynthAction(
                 action_name='SourceCode_Synthesis',
@@ -52,6 +56,7 @@ class PipelineStack(core.Stack):
             ),
             self_mutating=True
         )
+
         teststage = pipeline.add_application_stage(
             ApplicationStage(
                 self,
@@ -60,7 +65,7 @@ class PipelineStack(core.Stack):
             ),
             manual_approvals=False
         )
-        teststage.add_manual_approval_action(action_name='Ready_To_Move_To_Next_Stage')
+        teststage.add_manual_approval_action(action_name='Promote')
 
         devstage = pipeline.add_application_stage(
             ApplicationStage(
@@ -85,8 +90,8 @@ class PipelineStack(core.Stack):
         )
         notifications.PipelineNotificationRule(
             self,
-            'MapPipelineNotificationRule',
-            name='MapPipelineNotificationRule',
+            'MapCdkPipelineNotificationRule',
+            name='MapCdkPipelineNotificationRule',
             pipeline=pipeline.code_pipeline,
             events=[
                 # notifications.PipelineEvent.ACTION_EXECUTION_SUCCEEDED,

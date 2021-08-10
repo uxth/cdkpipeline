@@ -1,0 +1,29 @@
+{{- if .Values.mfs.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mfs-app
+  namespace: argo
+spec:
+  destination:
+    namespace: mfs
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    path: argo_cd/map_apps/mfs/
+    repoURL: 'git@ghe.tusimple.io:TuSimple/map-aws-infra.git'
+    targetRevision: {{ .Values.mfs.spec.source.targetRevision }}
+    helm:
+      valueFiles:
+        {{- range .Values.mfs.spec.source.helm.valueFiles }}
+        - {{ . }}
+        {{- end }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=background
+{{- end }}

@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflow
+  namespace: argo
+spec:
+  destination:
+    name: ''
+    namespace: argo
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: argo_cd/argocd_apps/argo_workflow
+    repoURL: 'git@ghe.tusimple.io:TuSimple/map-aws-infra.git'
+    targetRevision: ningxu/argo_cd
+    helm:
+      valueFiles:
+        - values_dev.yaml
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Replace=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - PrunePropagationPolicy=background
